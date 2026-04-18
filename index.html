@@ -29,7 +29,7 @@
 
 
 .taxi-check-widget { padding: 0 !important; }
-.taxi-check-widget .app { width: 100%; max-width: 960px; margin: 0 auto; border-radius: 24px; overflow: hidden; }
+.taxi-check-widget .app { width: 100%; max-width: 960px; margin: 0 auto; border-radius: 24px; overflow: visible; }
 .taxi-check-widget .screen, .taxi-check-widget .screen.active,
 .taxi-check-widget .intro-hero, .taxi-check-widget .intro-stats, .taxi-check-widget .intro-body,
 .taxi-check-widget .q-body, .taxi-check-widget .info-body, .taxi-check-widget .contact-footer {
@@ -237,6 +237,12 @@
 .taxi-check-widget .choice-btn.c-fail.selected, .taxi-check-widget .choice-btn.c-fail:hover {
   border-width:2.5px; border-color:#C4421A; background:#FFD9CC; color:#7A2A1A;
 }
+.taxi-check-widget .choice-btn.c-blue {
+  border-color:#4A90D9;
+}
+.taxi-check-widget .choice-btn.c-blue.selected, .taxi-check-widget .choice-btn.c-blue:hover {
+  border-width:2.5px; border-color:#1A5FA8; background:#D6E8FA; color:#1A3A6A;
+}
 .taxi-check-widget .btn-icon { font-size:18px; }
 /* 중립 버튼: 테두리/배경 기본 */
 .taxi-check-widget .btn-neutral {
@@ -314,6 +320,185 @@
 }
 .taxi-check-widget .yn-choices { display:flex; flex-direction:column; gap:12px; }
 .taxi-check-widget .choices { display:flex; flex-direction:column; gap:10px; }
+
+/* ── 경력 계산기 ── */
+.taxi-check-widget .calc-body {
+  padding: 14px 16px 160px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.taxi-check-widget .calc-header {
+  margin-bottom: 16px;
+}
+.taxi-check-widget .calc-rows {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 14px;
+}
+.taxi-check-widget .calc-row {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  position: relative;
+}
+.taxi-check-widget .calc-row-num {
+  font-size: 11px; font-weight: 800; color: var(--orange);
+  letter-spacing: 0.3px; margin-bottom: 2px;
+}
+.taxi-check-widget .calc-row select,
+.taxi-check-widget .calc-row input[type="month"] {
+  width: 100%; padding: 13px 12px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  background: #fff; color: var(--text);
+  font-family: 'Nanum Square','Noto Sans KR', sans-serif;
+  font-size: 15px; font-weight: 700;
+  appearance: none; -webkit-appearance: none;
+  outline: none; transition: border-color 0.15s;
+  height: 50px; box-sizing: border-box;
+}
+.taxi-check-widget .calc-row select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A6A62' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.taxi-check-widget .calc-row select:focus,
+.taxi-check-widget .calc-row input[type="month"]:focus {
+  border-color: var(--orange);
+}
+/* month input 빈 상태 placeholder */
+.taxi-check-widget .calc-month-wrap {
+  position: relative;
+}
+.taxi-check-widget .calc-month-wrap input[type="month"] {
+  position: relative; z-index: 1; background: transparent;
+}
+.taxi-check-widget .calc-month-wrap .calc-month-placeholder {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: 0 12px; pointer-events: none; z-index: 0;
+  font-size: 13px; font-weight: 700; color: #bbb;
+  background: #fff; border-radius: 8px;
+  text-align: center;
+}
+.taxi-check-widget .calc-month-wrap.has-value .calc-month-placeholder {
+  display: none;
+}
+.taxi-check-widget .calc-overlap-warn {
+  font-size: 12px; font-weight: 700; color: #C4421A;
+  margin-top: 5px; display: none;
+  padding: 5px 10px; background: #FFF0EB;
+  border-radius: 6px; border-left: 3px solid #C4421A;
+}
+.taxi-check-widget .calc-overlap-warn.show { display: block; }
+.taxi-check-widget .calc-row .calc-dates {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.taxi-check-widget .calc-row .calc-date-label {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  margin-bottom: 3px;
+}
+.taxi-check-widget .calc-row .calc-date-wrap {
+  display: flex; flex-direction: column;
+}
+/* 현재 운행 중: 종료월 박스 아래 오른쪽 끝 정렬 */
+.taxi-check-widget .calc-row .calc-ongoing {
+  display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+  font-size: 13px; font-weight: 700; color: var(--muted);
+  cursor: pointer; padding: 4px 0 0;
+  align-self: flex-end;
+}
+.taxi-check-widget .calc-row .calc-ongoing input[type="checkbox"] {
+  width: 16px; height: 16px; accent-color: var(--orange);
+  cursor: pointer; flex-shrink: 0;
+}
+.taxi-check-widget .calc-row-num-row {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 22px;
+}
+.taxi-check-widget .calc-row-del {
+  background: none; border: 1.5px solid var(--border);
+  border-radius: 6px; cursor: pointer;
+  font-size: 12px; font-weight: 800; color: var(--muted);
+  padding: 3px 10px; line-height: 1.4;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.taxi-check-widget .calc-row-del:hover { border-color: #C4421A; color: #C4421A; background: #FFF0EB; }
+/* 경력 추가하기 버튼 */
+.taxi-check-widget .btn-add-career {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 13px 16px; margin-bottom: 14px;
+  border: 2px dashed var(--border); border-radius: 12px;
+  background: #fff; cursor: pointer;
+  font-family: 'Nanum Square','Noto Sans KR', sans-serif;
+  font-size: 15px; font-weight: 800; color: var(--muted);
+  transition: all 0.15s;
+}
+.taxi-check-widget .btn-add-career:hover { border-color: var(--orange); color: var(--orange); }
+.taxi-check-widget .btn-add-career .btn-add-icon {
+  font-size: 18px; font-weight: 900; line-height: 1;
+}
+.taxi-check-widget .calc-result-box {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+  margin-bottom: 12px; display: none;
+}
+.taxi-check-widget .calc-result-box.show { display: block; }
+.taxi-check-widget .calc-result-title {
+  font-size: 12px; font-weight: 800; color: var(--muted);
+  margin-bottom: 8px; letter-spacing: 0.3px;
+}
+.taxi-check-widget .calc-result-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.taxi-check-widget .calc-result-row:last-child { border-bottom: none; }
+.taxi-check-widget .calc-result-label { color: var(--muted); font-weight: 700; }
+.taxi-check-widget .calc-result-value { font-weight: 900; color: var(--navy); }
+.taxi-check-widget .calc-result-value.ok { color: #167A3C; }
+.taxi-check-widget .calc-result-value.fail { color: #C4421A; }
+.taxi-check-widget .calc-result-value.warn { color: #9A6500; }
+.taxi-check-widget .sample-img-area {
+  margin: 12px 0 4px;
+}
+.taxi-check-widget .btn-sample-img {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 11px 16px;
+  background: var(--bg); border: 1.5px dashed var(--border);
+  border-radius: 10px; cursor: pointer;
+  font-family: 'Nanum Square','Noto Sans KR', sans-serif;
+  font-size: 14px; font-weight: 700; color: var(--muted);
+  transition: border-color 0.15s, color 0.15s;
+}
+.taxi-check-widget .btn-sample-img:hover { border-color: var(--orange); color: var(--orange); }
+.taxi-check-widget .btn-sample-img .sample-icon { font-size: 18px; flex-shrink: 0; }
+/* 샘플 이미지 모달 */
+.taxi-check-widget .sample-img-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9998;
+  background: rgba(0,0,0,0.82);
+  flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px 16px;
+}
+.taxi-check-widget .sample-img-overlay.show { display: flex; }
+.taxi-check-widget .sample-img-title {
+  color: #fff; font-size: 15px; font-weight: 800;
+  margin-bottom: 14px; text-align: center;
+}
+.taxi-check-widget .sample-img-placeholder {
+  width: 100%; max-width: 480px;
+  aspect-ratio: 3/4;
+  background: #2a2a2a; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px;
+  color: rgba(255,255,255,0.35); font-size: 13px; font-weight: 700;
+}
+.taxi-check-widget .sample-img-placeholder .sample-placeholder-icon { font-size: 40px; }
+.taxi-check-widget .btn-sample-close {
+  margin-top: 18px; padding: 12px 36px;
+  background: #fff; color: var(--orange); border: none;
+  border-radius: 50px; font-size: 14px; font-weight: 800;
+  cursor: pointer; font-family: 'Nanum Square','Noto Sans KR', sans-serif;
+}
 
 /* ── INFO BODY ── */
 .taxi-check-widget .info-body { padding:20px 20px 32px; flex:1; display:flex; flex-direction:column; }
@@ -430,9 +615,9 @@
 
 /* ── CONTACT FOOTER ── */
 .taxi-check-widget .contact-footer { background:var(--navy); padding:24px 20px; margin-top:24px; }
-.taxi-check-widget .contact-title { font-size:13px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:4px; }
+.taxi-check-widget .contact-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:4px; }
 .taxi-check-widget .contact-brand { font-size:15px; font-weight:900; color:#fff; margin-bottom:12px; }
-.taxi-check-widget .contact-desc { font-size:12px; color:rgba(255,255,255,0.55); line-height:1.7; margin-bottom:16px; }
+.taxi-check-widget .contact-desc { font-size:12px; color:#fff; line-height:1.7; margin-bottom:16px; }
 .taxi-check-widget .contact-links { display:flex; flex-direction:column; gap:8px; }
 .taxi-check-widget .contact-link {
   display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px;
@@ -455,7 +640,9 @@
 .taxi-check-widget .safe { height:32px; }
 
 /* ══ 하단 고정 바 ══ */
-.taxi-check-widget .nav-arrow-bar {
+.taxi-check-widget .nav-arrow-bar,
+.taxi-check-widget .diag-bottom-bar,
+.taxi-check-widget .consult-bottom-bar .consult-nav-area {
   display: none;
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
   flex-direction: column;
@@ -531,13 +718,26 @@
   padding: 10px 16px 10px; text-align: center;
   margin-top: auto;
 }
-/* s8B1·sDocs 페이지 하단 여백 (미니바 높이 확보) */
-/* s8B1/sDocs/s9B: nav-arrow-bar 없으므로 mini-bar 높이만큼만 여백 */
+/* 진단표 페이지 고정 하단 바 */
+.taxi-check-widget .diag-bottom-bar.show { display: flex; }
+.taxi-check-widget .consult-bottom-bar .consult-nav-area { display: flex; }
+
+/* 전문 상담 페이지 고정 하단 바 */
+.taxi-check-widget .consult-bottom-bar {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 499;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 60vh;
+}
+.taxi-check-widget .consult-bottom-bar.show { display: flex; }
+/* s8B1·sDocs 페이지 하단 여백 */
 .taxi-check-widget #s8B1-mo .info-body,
-.taxi-check-widget #sDocs-mo .info-body,
-.taxi-check-widget #s9B-mo .info-body { padding-bottom: 4px; }
+.taxi-check-widget #sDocs-mo .info-body { padding-bottom: 4px; }
 /* s8B1 상단 여백 확보 - 헤더와 타이틀 간격 */
-.taxi-check-widget #s8B1-mo .info-body { padding-top: 28px !important; }
+.taxi-check-widget #s8B1-mo .info-body { padding-top: 28px !important; padding-bottom: 80px !important; }
+/* s9B info-body - consult-bottom-bar 고정 영역만큼 여백 */
+.taxi-check-widget #s9B-mo .info-body { padding-bottom: 320px !important; }
 /* s8B1 info-title 폰트 3px 감소 */
 .taxi-check-widget #s8B1-mo .info-title { font-size: 17px !important; margin-bottom: 20px !important; }
 /* 기존 분리 영역 완전 숨김 */
@@ -548,10 +748,11 @@
 .taxi-check-widget .diag-fail { color:#D32F2F !important; font-weight:800; }
 .taxi-check-widget .diag-ok { color:#1B7E3E; font-weight:800; }
 .taxi-check-widget .diag-warn { color:#B45309; font-weight:800; }
+.taxi-check-widget .diag-blue { color:#1A5FA8; font-weight:800; }
 
 /* ── 수정7: 스크롤 수정 ── */
 .taxi-check-widget {
-  overflow-y:auto !important;
+  overflow-y:visible !important;
   overflow-x:hidden !important;
   height:auto !important;
   min-height:100vh;
@@ -609,14 +810,14 @@
   width: 100%;
   padding: 16px;
   background: #fff;
-  overflow: hidden;
+  overflow: visible;
 }
 .taxi-check-widget .app {
   width: 100%;
   max-width: 560px;
   min-height: auto;
   border-radius: 24px;
-  overflow: hidden;
+  overflow: visible;
 }
 .taxi-check-widget .screen {
   min-height: 100%;
@@ -1016,6 +1217,7 @@
 .taxi-check-widget .diagnosis-table td.diag-ok  { color: #167A3C; font-weight: 800; background: #EDFAF2; }
 .taxi-check-widget .diagnosis-table td.diag-fail { color: #C4421A; font-weight: 800; background: #FFF0EB; }
 .taxi-check-widget .diagnosis-table td.diag-warn { color: #9A6500; font-weight: 800; background: #FFF8E6; }
+.taxi-check-widget .diagnosis-table td.diag-blue { color: #1A5FA8; font-weight: 800; background: #D6E8FA; }
 .taxi-check-widget .result-actions { display:flex; flex-direction:column; gap:10px; }
 .taxi-check-widget .result-actions .btn-primary,
 .taxi-check-widget .result-actions .btn-link-neutral { width:100%; }
@@ -1112,7 +1314,9 @@
     padding-bottom: 150px !important;
   }
   /* 모바일 고정 바: 화면 너비 100% */
-  .taxi-check-widget.taxi-check-widget-mobile .nav-arrow-bar {
+  .taxi-check-widget.taxi-check-widget-mobile .nav-arrow-bar,
+  .taxi-check-widget.taxi-check-widget-mobile .diag-bottom-bar,
+  .taxi-check-widget.taxi-check-widget-mobile .consult-bottom-bar .consult-nav-area {
     padding: 10px 14px 8px;
   }
   .taxi-check-widget.taxi-check-widget-mobile .nav-arrow-btn {
@@ -1206,7 +1410,6 @@ body { display: flex; flex-direction: column; align-items: stretch; }
   min-height: unset !important;
   overflow: visible !important;
 }
-.taxi-check-widget #s8B1-mo,
 .taxi-check-widget #sDocs-mo,
 .taxi-check-widget #s9B-mo,
 .taxi-check-widget #s0-mo {
@@ -1216,7 +1419,6 @@ body { display: flex; flex-direction: column; align-items: stretch; }
 .taxi-check-widget #s0-mo .intro-body {
   flex: 0 0 auto !important;
 }
-.taxi-check-widget #s8B1-mo .info-body,
 .taxi-check-widget #sDocs-mo .info-body,
 .taxi-check-widget #s9B-mo .info-body {
   flex: 0 0 auto !important;
@@ -1346,7 +1548,7 @@ body { display: flex; flex-direction: column; align-items: stretch; }
         <div class="q-text">서울시 거주 이력은 어느 정도이신가요?</div>
         <div class="q-sub">서류 접수일 기준 태어난 이후로 도합 12개월 이상의 서울시 거주 이력이 필요합니다.(주민등록초본 기준)</div>
       </div>
-      <div class="a-area">
+<div class="a-area">
         <div class="choices">
           <button type="button" class="choice-btn c-fail" onclick="handleResidenceHistory_mo('6개월 미만')"><div class="choice-num">①</div><span>6개월 미만</span></button>
           <button type="button" class="choice-btn c-fail" onclick="handleResidenceHistory_mo('6개월 이상 12개월 미만')"><div class="choice-num">②</div><span>6개월 이상 12개월 미만</span></button>
@@ -1372,8 +1574,8 @@ body { display: flex; flex-direction: column; align-items: stretch; }
       </div>
       <div class="a-area">
         <div class="yn-choices">
-          <button type="button" class="btn-yes" onclick="go_mo('s3')"><span>예, 서울에 살고 있습니다</span></button>
-          <button type="button" class="btn-no" onclick="handleCurrentSeoulNo_mo()"><span>아니오, 타 지역입니다</span></button>
+          <button type="button" class="btn-yes" onclick="go_mo('s3')"><span>예, 서울에 살고 있습니다.</span></button>
+          <button type="button" class="btn-no" onclick="handleCurrentSeoulNo_mo()"><span>아니오, 타 지역입니다.</span></button>
         </div>
       </div>
     </div>
@@ -1390,8 +1592,8 @@ body { display: flex; flex-direction: column; align-items: stretch; }
       </div>
       <div class="a-area">
         <div class="yn-choices">
-          <button type="button" class="btn-yes" onclick="go_mo('s6B1')"><span>예, 취득했습니다</span></button>
-          <button type="button" class="btn-no" onclick="handleTaxiCertNo_mo()"><span>아니오, 미취득입니다</span></button>
+          <button type="button" class="btn-yes" onclick="go_mo('s6B1')"><span>예, 취득했습니다.</span></button>
+          <button type="button" class="btn-no" onclick="handleTaxiCertNo_mo()"><span>아니오, 미취득입니다.</span></button>
         </div>
       </div>
     </div>
@@ -1406,10 +1608,10 @@ body { display: flex; flex-direction: column; align-items: stretch; }
         <div class="step-tag">STEP 3 · 택시운전자격증</div>
         <div class="q-text">서울시 택시운전자격증을 취득하셨나요?</div>
       </div>
-      <div class="a-area">
+<div class="a-area">
         <div class="yn-choices">
-          <button type="button" class="btn-yes" onclick="go_mo('s6B1')"><span>예, 취득했습니다</span></button>
-          <button type="button" class="btn-no" onclick="handleTaxiCertNo_mo()"><span>아니오, 미취득입니다</span></button>
+          <button type="button" class="btn-yes" onclick="go_mo('s6B1')"><span>예, 취득했습니다.</span></button>
+          <button type="button" class="btn-no" onclick="handleTaxiCertNo_mo()"><span>아니오, 미취득입니다.</span></button>
         </div>
       </div>
     </div>
@@ -1438,97 +1640,66 @@ body { display: flex; flex-direction: column; align-items: stretch; }
       <div class="q-area">
         <div class="step-tag">STEP 4 · 양수교육 수료 여부</div>
         <div class="q-text">개인택시 양수교육을 수료하셨나요?</div>
-        <div class="q-sub">개인택시 양수교육은 화성/상주 교통안전체험교육센터에서 시행되며, 영업용 경력 기준을 충족하지 못하시는 분들은 필수적으로 수료하셔야 합니다.<br><br>또한, 24년 3월 이전 수료자는 수료일로부터 3년동안, 24년 3월 이후 수료자는 수료일로부터 1년동안 유효합니다.</div>
+        <div class="q-sub">개인택시 양수교육은 화성/상주 교통안전체험교육센터에서 시행되며, 교육 면제 경력 기준을 충족하지 못하시는 분들은 필수적으로 수료하셔야 합니다.<br><br>~2024/02/28 수료자: 수료일로부터 3년간 유효<br>2024/03/01~ 수료자: 수료일로부터 1년간 유효<br>예) 1) 2023/12/11 수료: ~2026/12/11 유효<br>2) 2025/06/03 수료: ~2026/06/02 유효</div>
       </div>
-      <div class="a-area">
+<div class="a-area">
         <div class="choices">
-          <button type="button" class="choice-btn c-ok" onclick="handleTransferEducationStatus_mo('수료')"><div class="choice-num">①</div><span>수료했습니다</span></button>
-          <button type="button" class="choice-btn c-ok" onclick="handleTransferEducationStatus_mo('수료 예정')"><div class="choice-num">②</div><span>당첨되었으며 교육 예정입니다</span></button>
-          <button type="button" class="choice-btn c-ok" onclick="handleTransferEducationStatus_mo('경력자 불필요')"><div class="choice-num">③</div><span>영업용 경력자이므로 교육 수료가 필요하지 않습니다</span></button>
-          <button type="button" class="choice-btn c-fail" onclick="handleTransferEducationStatus_mo('미당첨')"><div class="choice-num">④</div><span>아직 당첨되지 않았습니다</span></button>
-          <button type="button" class="choice-btn" onclick="handleTransferEducationStatus_mo('잘 모르겠음')"><div class="choice-num">⑤</div><span>잘 모르겠습니다</span></button>
+          <button type="button" class="choice-btn c-ok" onclick="handleTransferEducationStatus_mo('수료')"><div class="choice-num">①</div><span>[교육대상자] 교육을 수료했습니다.</span></button>
+          <button type="button" class="choice-btn c-ok" onclick="handleTransferEducationStatus_mo('수료 예정')"><div class="choice-num">②</div><span>[교육대상자] 당첨되었으며 교육 예정입니다.</span></button>
+          <button type="button" class="choice-btn c-fail" onclick="handleTransferEducationStatus_mo('미당첨')"><div class="choice-num">③</div><span>[교육대상자] 아직 당첨되지 않았습니다.</span></button>
+          <button type="button" class="choice-btn c-blue" onclick="handleTransferEducationStatus_mo('경력자 불필요')"><div class="choice-num">④</div><span>[교육 면제자] 양수교육이 필요하지 않습니다. (영업용/운전직 경력)</span></button>
+          <button type="button" class="choice-btn" onclick="handleTransferEducationStatus_mo('잘 모르겠음')"><div class="choice-num">⑤</div><span>잘 모르겠습니다.</span></button>
         </div>
       </div>
     </div>
     <div class="safe"></div>
   </div>
 
-  <!-- ══ 4. 영업용 경력? ══ -->
+  <!-- ══ 4. 영업용 경력 여부? ══ -->
   <div class="screen" id="s4-mo">
     <div class="q-body">
       <button type="button" class="btn-back-top" id="back-s4-mo" onclick="go_mo('s6B1',false)"><span class="arrow">←</span>이전 단계로</button>
       <div class="q-area">
-        <div class="step-tag">STEP 5 · 영업용 차량 경력</div>
+        <div class="step-tag">STEP 4-2 · 영업용 차량 경력</div>
         <div class="q-text">영업용 차량 경력이 있으신가요?</div>
-        <div class="q-sub">법인택시, 버스, 화물, 지입, 법인 운전직 등의 영업용 차량 운전 경력을 의미하며, 조건을 충족하는 분은 개인택시 양수교육을 수료하지 않아도 양수가 가능합니다.</div>
+        <div class="q-sub">법인택시, 버스, 화물, 지입, 법인/기관 운전직 등의 영업용 차량 운전 경력을 의미하며, 조건을 충족하는 분은 개인택시 양수교육을 수료하지 않아도 양수가 가능합니다.</div>
       </div>
       <div class="a-area">
         <div class="yn-choices">
-          <button type="button" class="btn-yes" onclick="go_mo('s5A')"><span>예, 있습니다</span></button>
-          <button type="button" class="btn-no" onclick="go_mo('s5B')"><span>아니오, 없습니다</span></button>
+          <button type="button" class="btn-yes" onclick="handleCommercialExpYes_mo()"><span>예, 영업용 차량 혹은 운전직 경력을 보유하고 있습니다.</span></button>
+          <button type="button" class="btn-no" onclick="go_mo('s5B')"><span>아니오, 관련한 경력이 없습니다.</span></button>
         </div>
       </div>
     </div>
     <div class="safe"></div>
   </div>
 
-  <!-- ══ 5A. 경력 종류 ══ -->
-  <div class="screen" id="s5A-mo">
-    <div class="q-body">
-      <button type="button" class="btn-back-top" onclick="navArrowPrev_mo()"><span class="arrow">←</span>이전 단계로</button>
-      <div class="q-area">
-        <div class="step-tag">STEP 5 · 경력 종류</div>
-        <div class="q-text">해당하는 경력의 종류를 선택해 주세요</div>
-        <div class="q-sub">복수의 경력을 보유하신 경우 가장 주요한 경력 또는 복수 선택을 해주세요.</div>
+  <!-- ══ 5A. 경력 종류 (미사용) ══ -->
+  <div class="screen" id="s5A-mo" style="display:none !important;"></div>
+
+  <!-- ══ 5A-Calc. 경력 계산기 ══ -->
+  <div class="screen" id="s5ACalc-mo">
+    <div class="calc-body">
+      <button type="button" class="btn-back-top" onclick="goBack_mo()" style="margin-bottom:12px;"><span class="arrow">←</span>이전 단계로</button>
+      <div class="calc-header">
+        <div class="step-tag">STEP 5 · 경력 계산기</div>
+        <div class="q-text" style="font-size:19px;">보유하신 운전 관련 경력을 입력해 주세요(무사고 기간)</div>
+        <div class="q-sub" style="margin-top:8px;">경력 종류를 선택하면 다음 입력란이 자동으로 추가됩니다.<br>법인/기관 운전직 경력은 1/2로 환산 합산됩니다.<br><br>가장 오래된 경력부터 순서대로 입력해 주세요.<br>(본 계산기의 경력 기준은 서울특별시 기준입니다. 지역따라 상이할 수 있으니 참고해 주세요.)</div>
       </div>
-      <div class="a-area">
-        <div class="choices">
-          <button type="button" class="choice-btn" onclick="selectCareerType_mo('법인택시')"><div class="choice-num">①</div><span>법인택시</span></button>
-          <button type="button" class="choice-btn" onclick="selectCareerType_mo('버스/화물/지입')"><div class="choice-num">②</div><span>버스 / 화물 / 지입</span></button>
-          <button type="button" class="choice-btn" onclick="selectCareerType_mo('법인 운전직')"><div class="choice-num">③</div><span>법인 운전직</span></button>
-          <button type="button" class="choice-btn" onclick="handleMultiCareer_mo()"><div class="choice-num">④</div><span>복수 경력 보유 (2개 이상)</span></button>
-        </div>
+      <div class="calc-rows" id="calcRows-mo"></div>
+      <button type="button" class="btn-add-career" id="calcAddBtn-mo" style="display:none;" onclick="addCalcRow_mo()">
+        <span class="btn-add-icon">＋</span> 경력 추가하기
+      </button>
+      <div class="calc-result-box" id="calcResultBox-mo">
+        <div class="calc-result-title">📊 경력 계산 결과</div>
+        <div id="calcResultRows-mo"></div>
       </div>
+      <div class="calc-result-box" id="calcEduBox-mo">
+        <div class="calc-result-title">📋 교육 대상 여부</div>
+        <div id="calcEduRows-mo"></div>
+      </div>
+      <button type="button" class="btn-primary" id="calcNextBtn-mo" style="display:none;" onclick="confirmCalc_mo()">다음 단계로 →</button>
     </div>
-    <div class="safe"></div>
-  </div>
-
-
-
-  <!-- ══ 수정11: 공통 무사고 운전 기간 선택 ══ -->
-  <div class="screen" id="s5APeriod-mo">
-    <div class="q-body">
-      <button type="button" class="btn-back-top" onclick="go_mo('s5A',false)"><span class="arrow">←</span>이전 단계로</button>
-      <div class="q-area">
-        <div class="step-tag" id="s5APeriod-step-tag-mo">STEP 6 · 무사고 운전 기간</div>
-        <div class="q-text">무사고 운전 기간을 선택해 주세요</div>
-        <div class="q-sub">경력 종류와 무관하게 해당하는 기간을 선택하세요. 서류 접수일 기준입니다.</div>
-      </div>
-      <div class="a-area">
-        <div class="choices" id="s5APeriodChoices-mo">
-          <!-- JS로 동적 렌더링 -->
-        </div>
-      </div>
-    </div>
-    <div class="safe"></div>
-  </div>
-
-  <!-- ══ 5A-2. 영업용 경력 기간 (2단계) ══ -->
-  <div class="screen" id="s5APeriod2-mo">
-    <div class="q-body">
-      <button type="button" class="btn-back-top" onclick="go_mo('s5APeriod',false)"><span class="arrow">←</span>이전 단계로</button>
-      <div class="q-area">
-        <div class="step-tag" id="s5APeriod2-step-tag-mo">STEP 6-2 · 영업용 차량 경력 기간</div>
-        <div class="q-text">영업용 차량 경력 기간을 선택해 주세요</div>
-        <div class="q-sub" id="s5APeriod2-sub-mo">서류 접수일 기준입니다.</div>
-      </div>
-      <div class="a-area">
-        <div class="choices" id="s5APeriod2Choices-mo">
-          <!-- JS로 동적 렌더링 -->
-        </div>
-      </div>
-    </div>
-    <div class="safe"></div>
   </div>
 
   <!-- ══ 5A-추가1. 법인택시 중단 기간 ══ -->
@@ -1562,8 +1733,8 @@ body { display: flex; flex-direction: column; align-items: stretch; }
       </div>
       <div class="a-area">
         <div class="yn-choices">
-          <button type="button" class="btn-yes" onclick="routeCareerAfterEdu_mo()"><span>예, 수료했습니다</span></button>
-          <button type="button" class="btn-no" onclick="routeCareerAfterEdu_mo()"><span>아니오, 미수료입니다</span></button>
+          <button type="button" class="btn-yes" onclick="routeCareerAfterEdu_mo()"><span>예, 수료했습니다.</span></button>
+          <button type="button" class="btn-no" onclick="routeCareerAfterEdu_mo()"><span>아니오, 미수료입니다.</span></button>
         </div>
       </div>
     </div>
@@ -1611,47 +1782,62 @@ body { display: flex; flex-direction: column; align-items: stretch; }
     <div class="safe"></div>
   </div>
 
-  <!-- ══ 6A-3. 법인 운전직 경력 ══ -->
+  <!-- ══ 6A-3. 법인/기관 운전직 경력 ══ -->
   <div class="screen" id="s6A3-mo">
     <div class="q-body">
       <button type="button" class="btn-back-top" onclick="go_mo('s5A',false)"><span class="arrow">←</span>이전 단계로</button>
       <div class="q-area">
-        <div class="step-tag">STEP 6 · 법인 운전직 무사고 경력</div>
+        <div class="step-tag">STEP 6 · 법인/기관 운전직 무사고 경력</div>
         <div class="q-text">최근 6년 내 5년 이상 무사고 경력을 보유하고 계신가요?</div>
         <div class="q-sub">모든 경력 기간은 서류 접수일 기준입니다.</div>
       </div>
       <div class="a-area">
         <div class="yn-choices">
-          <button type="button" class="btn-yes" onclick="handleCareerPeriod_mo('법인 운전직', '최근 6년 내 5년 이상 무사고')"><span>예, 해당됩니다</span></button>
-          <button type="button" class="btn-no" onclick="handleCareerPeriod_mo('법인 운전직', '위 경력 기간에 해당하지 않음')"><span>아니오, 해당되지 않습니다</span></button>
+          <button type="button" class="btn-yes" onclick="handleCareerPeriod_mo('법인/기관 운전직', '최근 6년 내 5년 이상 무사고')"><span>예, 해당됩니다</span></button>
+          <button type="button" class="btn-no" onclick="handleCareerPeriod_mo('법인/기관 운전직', '위 경력 기간에 해당하지 않음')"><span>아니오, 해당되지 않습니다</span></button>
         </div>
       </div>
     </div>
     <div class="safe"></div>
   </div>
 
-  <!-- ══ 6A-4. 복수 경력 ══ -->
+  <!-- ══ 6A-4. 복수 경력 종류 선택 ══ -->
   <div class="screen" id="s6A4-mo">
-    <div class="info-body">
+    <div class="q-body">
       <button type="button" class="btn-back-top" onclick="go_mo('s5A',false)"><span class="arrow">←</span>이전 단계로</button>
-      <div class="step-tag">STEP 6 · 복수 경력</div>
-      <div class="info-title">복수 경력 합산 안내</div>
-      <div class="alert-box info">복수의 경력을 보유한 경우, 경력을 합산하여 <strong>최근 3년 내 2년 6개월 이상 무사고 기간을 충족</strong>하면 인정됩니다.<br><br>단, <strong>법인 운전직 경력은 1/2로 환산</strong>하여 합산합니다.</div>
-      <div class="doc-section">
-        <div class="doc-section-title">📄 기본 필요 서류</div>
-        <div class="doc-item"><span class="doc-mark">필수</span><div>운전면허증 / 택시자격증</div></div>
-        <div class="doc-item"><span class="doc-mark">필수</span><div>인감증명서 (일반용)</div></div>
-        <div class="doc-item"><span class="doc-mark">필수</span><div>인감도장</div></div>
-        <div class="doc-item"><span class="doc-mark">필수</span><div>기본증명서 (상세)</div></div>
-        <div class="doc-item"><span class="doc-mark">필수</span><div>주민등록초본 (전체주소)</div></div>
-        <div class="doc-item"><span class="doc-mark">필수</span><div>운전경력증명서 (전체경력 / 경찰서 발급)</div></div>
-        <div class="doc-item"><span class="doc-mark">필수</span><div>운전적성정밀검사[신규] 판정표<br><span style="font-size:12px;color:var(--muted)">(사고 있을 시 [특별검사] 포함)</span></div></div>
+      <div class="q-area">
+        <div class="step-tag">STEP 6 · 복수 경력 종류</div>
+        <div class="q-text">보유하신 경력의 종류를 모두 선택해 주세요</div>
+        <div class="q-sub">복수 경력자는 최근 6년 내의 영업용 자동차 경력을 합산하여 5년 이상을 충족하여야 합니다.<br>단, 법인/기관 운전직 경력은 1/2로 환산됩니다.</div>
       </div>
-      <div class="doc-section-title" style="margin-bottom:10px;">📂 경력별 필요서류 확인하기</div>
-      <button type="button" class="choice-btn" style="margin-bottom:8px;" onclick="go_mo('s8B1')"><div class="choice-num">①</div><span>법인택시 서류 보기</span></button>
-      <button type="button" class="choice-btn" style="margin-bottom:8px;" onclick="go_mo('s8B1')"><div class="choice-num">②</div><span>버스 서류 보기</span></button>
-      <button type="button" class="choice-btn" style="margin-bottom:8px;" onclick="go_mo('s8B1')"><div class="choice-num">③</div><span>화물 서류 보기</span></button>
-      <button type="button" class="choice-btn" onclick="go_mo('s8B1')"><div class="choice-num">④</div><span>지입 서류 보기</span></button>
+      <div class="a-area">
+        <div class="choices">
+          <button type="button" class="choice-btn" id="multi-btn-corp-mo" onclick="toggleMultiCareer_mo('법인택시', this)"><div class="choice-num">①</div><span>법인택시</span></button>
+          <button type="button" class="choice-btn" id="multi-btn-bus-mo" onclick="toggleMultiCareer_mo('버스/화물/지입', this)"><div class="choice-num">②</div><span>버스 / 화물 / 지입</span></button>
+          <button type="button" class="choice-btn" id="multi-btn-drv-mo" onclick="toggleMultiCareer_mo('법인/기관 운전직', this)"><div class="choice-num">③</div><span>법인/기관 운전직</span></button>
+        </div>
+        <button type="button" class="btn-primary" style="margin-top:16px;" onclick="confirmMultiCareer_mo()">선택 완료 →</button>
+      </div>
+    </div>
+    <div class="safe"></div>
+  </div>
+
+  <!-- ══ 6A-4B. 복수 경력 무사고 기간 ══ -->
+  <div class="screen" id="s6A4Quit-mo">
+    <div class="q-body">
+      <button type="button" class="btn-back-top" onclick="go_mo('s6A4',false)"><span class="arrow">←</span>이전 단계로</button>
+      <div class="q-area">
+        <div class="step-tag">STEP 6-2 · 복수 경력 무사고 기간</div>
+        <div class="q-text">무사고 운전 기간을 선택해 주세요</div>
+        <div class="q-sub">복수 경력 합산 기준 서류 접수일 기준입니다. 법인/기관 운전직 경력은 1/2로 환산 합산됩니다.</div>
+      </div>
+      <div class="a-area">
+        <div class="choices">
+          <button type="button" class="choice-btn c-ok" onclick="handleMultiAccident_mo('최근 3년 내 2년 6개월 이상 무사고')"><div class="choice-num">①</div><span>접수일 기준 최근 3년 내 2년 6개월 이상 무사고</span></button>
+          <button type="button" class="choice-btn c-ok" onclick="handleMultiAccident_mo('최근 6년 내 5년 이상 무사고')"><div class="choice-num">②</div><span>접수일 기준 최근 6년 내 5년 이상 무사고</span></button>
+          <button type="button" class="choice-btn c-fail" onclick="handleMultiAccident_mo('위 경력 기간에 해당하지 않음')"><div class="choice-num">③</div><span>위 경력 기간에 해당하지 않음</span></button>
+        </div>
+      </div>
     </div>
     <div class="safe"></div>
   </div>
@@ -1694,14 +1880,14 @@ body { display: flex; flex-direction: column; align-items: stretch; }
     <div class="safe"></div>
   </div>
 
-  <!-- ══ 7A-2-1. 법인 운전직 5년 이상 → 교육 불필요 ══ -->
+  <!-- ══ 7A-2-1. 법인/기관 운전직 5년 이상 → 교육 불필요 ══ -->
   <div class="screen" id="s7A21-mo">
     <div class="info-body">
       <button type="button" class="btn-back-top" onclick="go_mo('s6A3',false)"><span class="arrow">←</span>이전 단계로</button>
       <div class="alert-icon icon-ok">🎉</div>
       <div class="info-title">양수교육 없이 면허 양수가 가능합니다!</div>
-      <div class="alert-box ok">최근 6년 내 5년 이상의 법인 운전직 무사고 운전 경력을 갖고 계신 분들은 <strong>개인택시 양수교육 없이</strong> 운송사업면허를 양수하실 수 있습니다.</div>
-      <button type="button" class="btn-link" onclick="go_mo('s8B1')">📂 법인 운전직 필요서류 확인하기 →</button>
+      <div class="alert-box ok">최근 6년 내 5년 이상의 법인/기관 운전직 무사고 운전 경력을 갖고 계신 분들은 <strong>개인택시 양수교육 없이</strong> 운송사업면허를 양수하실 수 있습니다.</div>
+      <button type="button" class="btn-link" onclick="go_mo('s8B1')">📂 법인/기관 운전직 필요서류 확인하기 →</button>
     </div>
     <div class="safe"></div>
   </div>
@@ -1815,12 +2001,12 @@ body { display: flex; flex-direction: column; align-items: stretch; }
     <div class="safe"></div>
   </div>
 
-  <!-- ══ 8A-6. 법인 운전직 서류 ══ -->
+  <!-- ══ 8A-6. 법인/기관 운전직 서류 ══ -->
   <div class="screen" id="s8A6-mo">
     <div class="info-body">
       <button type="button" class="btn-back-top" onclick="go_mo('s7A21',false)"><span class="arrow">←</span>이전 단계로</button>
-      <div class="step-tag">📂 법인 운전직 필요서류</div>
-      <div class="info-title">법인 운전직 경력 필요 서류</div>
+      <div class="step-tag">📂 법인/기관 운전직 필요서류</div>
+      <div class="info-title">법인/기관 운전직 경력 필요 서류</div>
       <div class="doc-section">
         <div class="doc-item"><span class="doc-mark">필수</span><div>경력증명서 (운전직 명시 필요)</div></div>
         <div class="doc-item"><span class="doc-mark">필수</span><div>원천징수영수증</div></div>
@@ -1843,7 +2029,7 @@ body { display: flex; flex-direction: column; align-items: stretch; }
         <div class="q-text">최근 5년 내 사람이 다친 사고 이력이 있나요?</div>
         <div class="q-sub">경찰서에서 발급되는 운전경력증명서를 통해 확인하실 수 있으며, 서류 접수일 기준 최근 5년을 기준으로 합니다.</div>
       </div>
-      <div class="a-area">
+<div class="a-area">
         <div class="yn-choices reverse">
           <button type="button" class="btn-yes" onclick="handleAccidentHistory_mo('예')"><span>예</span></button>
           <button type="button" class="btn-no" onclick="handleAccidentHistory_mo('아니오')"><span>아니오</span></button>
@@ -1862,13 +2048,14 @@ body { display: flex; flex-direction: column; align-items: stretch; }
     <div class="q-body">
       <button type="button" class="btn-back-top"><span class="arrow">←</span>이전 단계로</button>
       <div class="q-area">
-        <div class="step-tag">STEP 7 · 신규교육 확인</div>
+        <div class="step-tag">STEP 6 · 신규교육 확인</div>
         <div class="q-text">서울시 개인택시 신규교육을 수료하셨나요?</div>
+        <div class="q-sub">서울 개인택시 신규교육은 사당 서울시교통문화교육원에서 시행되며, 법인택시 경력 보유자 외는 필수적으로 수료하셔야 합니다.<br><br>(법인택시 혹은 개인택시 경력자는 퇴사 혹은 양도 이후 2년 이내라면 별도로 수료하지 않아도 괜찮습니다.)</div>
       </div>
-      <div class="a-area">
+<div class="a-area">
         <div class="yn-choices">
-          <button type="button" class="btn-yes" onclick="handleNewEducation_mo('수료')"><span>예, 수료했습니다</span></button>
-          <button type="button" class="btn-no" onclick="handleNewEducation_mo('미수료')"><span>아니오, 미수료입니다</span></button>
+          <button type="button" class="btn-yes" onclick="handleNewEducation_mo('수료')"><span>예, 수료했습니다.</span></button>
+          <button type="button" class="btn-no" onclick="handleNewEducation_mo('미수료')"><span>아니오, 미수료입니다.</span></button>
         </div>
       </div>
     </div>
@@ -1898,17 +2085,7 @@ body { display: flex; flex-direction: column; align-items: stretch; }
           <!-- JS로 렌더링 -->
         </div>
         <button type="button" class="btn-link-neutral" onclick="downloadDiagnosisAndDocs_mo()">진단표 + 맞춤 필요 서류 다운로드</button>
-        <button type="button" class="btn-link-neutral" onclick="goBack_mo()">← 이전 단계로</button>
-      </div>
-    </div>
-    <div class="mini-bottom-bar">
-      <div class="nav-home-row" style="justify-content:center; padding-bottom:6px;">
-        <button type="button" class="btn-home-link global-home-btn" onclick="resetToHome_mo()">처음으로 돌아가기</button>
-      </div>
-      <div class="nav-bottom-info">
-        <span class="nav-phone">개인택시 양수도센터 1566-7114</span>
-        <span class="nav-url">www.tlxc.co.kr</span>
-        <span class="nav-copyright">Copyright 2026. KOMOLAB Inc. All rights reserved.</span>
+        <button type="button" class="btn-link-neutral" onclick="s8B1Back_mo()">← 이전 단계로</button>
       </div>
     </div>
   </div>
@@ -1965,27 +2142,7 @@ body { display: flex; flex-direction: column; align-items: stretch; }
         </label>
       </div>
       <button type="button" id="submitBtn-mo" class="btn-primary" style="margin-top:4px;" disabled onclick="submitForm_mo()"><span>상담 신청 완료하기</span></button>
-      <button type="button" class="btn-link-neutral" style="margin-top:10px;" onclick="go_mo('s8B1',false)">← 이전 단계로</button>
-    </div>
-    <div class="contact-footer">
-      <div class="contact-title">운영</div>
-      <div class="contact-brand">개인택시 양수도센터</div>
-      <div class="contact-desc">모빌리티 전문 기업 <strong style="color:rgba(255,255,255,0.8)">한국모빌리티연구소</strong>가 운영하는 면허 중개 센터입니다. 안전함을 최우선으로 서울 개인택시 면허를 전문적으로 중개해드리고 있습니다.<br><br>서울 개인택시 면허 양수와 관련하여 궁금하신 점이 있으시거나, 1:1 양수 컨설팅 및 계약 진행이 필요하신 분들은 아래 연락처로 문의해 주세요.</div>
-      <div class="contact-links">
-        <a class="contact-link" href="tel:15667114"><span class="contact-link-icon">T</span><span>직통 상담전화: 1566-7114</span></a>
-        <a class="contact-link" href="http://pf.kakao.com/_faxiRn/" target="_blank"><span class="contact-link-icon">K</span><span>카카오톡 상담</span></a>
-        <a class="contact-link" href="http://www.tlxc.co.kr" target="_blank"><span class="contact-link-icon">W</span><span>공식 홈페이지</span></a>
-      </div>
-    </div>
-    <div class="mini-bottom-bar">
-      <div class="nav-home-row" style="justify-content:center; padding-bottom:6px;">
-        <button type="button" class="btn-home-link global-home-btn" onclick="resetToHome_mo()">처음으로 돌아가기</button>
-      </div>
-      <div class="nav-bottom-info">
-        <span class="nav-phone">개인택시 양수도센터 1566-7114</span>
-        <span class="nav-url">www.tlxc.co.kr</span>
-        <span class="nav-copyright">Copyright 2026. KOMOLAB Inc. All rights reserved.</span>
-      </div>
+      <button type="button" class="btn-link-neutral" style="margin-top:10px;" onclick="goBack_mo()">← 이전 단계로</button>
     </div>
   </div>
 
@@ -1998,7 +2155,7 @@ body { display: flex; flex-direction: column; align-items: stretch; }
       <div class="widget-modal-actions">
         <button type="button" class="btn-link-neutral" onclick="downloadMultiDoc_mo('법인택시')">법인택시 경력서류 다운로드</button>
         <button type="button" class="btn-link-neutral" onclick="downloadMultiDoc_mo('버스/화물/지입')">버스 / 화물 / 지입 경력서류 다운로드</button>
-        <button type="button" class="btn-link-neutral" onclick="downloadMultiDoc_mo('법인 운전직')">법인 운전직 경력서류 다운로드</button>
+        <button type="button" class="btn-link-neutral" onclick="downloadMultiDoc_mo('법인/기관 운전직')">법인/기관 운전직 경력서류 다운로드</button>
         <button type="button" class="btn-link-neutral" onclick="downloadMultiDocDiag_mo()">진단표 다운로드</button>
         <button type="button" class="btn-primary" onclick="closeMultiDocModal_mo()">닫기</button>
       </div>
@@ -2029,6 +2186,67 @@ body { display: flex; flex-direction: column; align-items: stretch; }
     </div>
   </div>
 
+  <!-- 경력 계산기 페이지 고정 하단 바 -->
+  <div class="nav-arrow-bar" id="calcBottomBar-mo">
+    <div class="nav-arrow-row">
+      <button type="button" class="nav-arrow-btn nav-arrow-prev" onclick="goBack_mo()">&#8592; 이전</button>
+      <button type="button" class="nav-arrow-btn nav-arrow-next" id="calcNavNextBtn-mo" onclick="confirmCalc_mo()" disabled>다음 &#8594;</button>
+    </div>
+    <div class="nav-home-row">
+      <button type="button" class="btn-home-link global-home-btn" onclick="resetToHome_mo()">처음으로 돌아가기</button>
+    </div>
+    <div class="nav-bottom-info">
+      <span class="nav-phone">개인택시 양수도센터 1566-7114</span>
+      <span class="nav-url">www.tlxc.co.kr</span>
+      <span class="nav-copyright">Copyright 2026. KOMOLAB Inc. All rights reserved.</span>
+    </div>
+  </div>
+
+  <!-- 진단표 페이지 고정 하단 바 -->
+  <div class="diag-bottom-bar" id="diagBottomBar-mo">
+    <div class="nav-home-row">
+      <button type="button" class="btn-home-link global-home-btn" onclick="resetToHome_mo()">처음으로 돌아가기</button>
+    </div>
+    <div class="nav-bottom-info">
+      <span class="nav-phone">개인택시 양수도센터 1566-7114</span>
+      <span class="nav-url">www.tlxc.co.kr</span>
+      <span class="nav-copyright">Copyright 2026. KOMOLAB Inc. All rights reserved.</span>
+    </div>
+  </div>
+
+  <!-- 전문 상담 페이지 고정 하단 바 -->
+  <div class="consult-bottom-bar" id="consultBottomBar-mo">
+    <div class="contact-footer" style="margin:0; padding:20px 20px 16px;">
+      <div class="contact-title" style="color:#fff;">운영</div>
+      <div class="contact-brand" style="color:#fff;">개인택시 양수도센터</div>
+      <div class="contact-desc" style="color:rgba(255,255,255,0.8);">모빌리티 전문 기업 <strong style="color:#fff;">한국모빌리티연구소</strong>가 운영하는 면허 중개 센터입니다. 1:1 양수 컨설팅 및 계약 진행이 필요하신 분들은 아래로 문의해 주세요.</div>
+      <div class="contact-links">
+        <a class="contact-link" href="tel:15667114"><span class="contact-link-icon">T</span><span>직통 상담전화: 1566-7114</span></a>
+        <a class="contact-link" href="http://pf.kakao.com/_faxiRn/" target="_blank"><span class="contact-link-icon">K</span><span>카카오톡 상담</span></a>
+        <a class="contact-link" href="http://www.tlxc.co.kr" target="_blank"><span class="contact-link-icon">W</span><span>공식 홈페이지</span></a>
+      </div>
+    </div>
+    <div class="consult-nav-area">
+      <div class="nav-home-row">
+        <button type="button" class="btn-home-link global-home-btn" onclick="resetToHome_mo()">처음으로 돌아가기</button>
+      </div>
+      <div class="nav-bottom-info">
+        <span class="nav-phone">개인택시 양수도센터 1566-7114</span>
+        <span class="nav-url">www.tlxc.co.kr</span>
+        <span class="nav-copyright">Copyright 2026. KOMOLAB Inc. All rights reserved.</span>
+      </div>
+    </div>
+  </div>
+  <!-- 샘플 이미지 오버레이 -->
+  <div class="sample-img-overlay" id="sampleImgOverlay-mo">
+    <div class="sample-img-title" id="sampleImgTitle-mo">샘플 이미지</div>
+    <div class="sample-img-placeholder">
+      <span class="sample-placeholder-icon">🖼️</span>
+      <span>이미지 준비 중</span>
+    </div>
+    <button type="button" class="btn-sample-close" onclick="closeSampleImg_mo()">닫기</button>
+  </div>
+
 </div><!-- /app -->
 </div>
 
@@ -2056,8 +2274,7 @@ const pMapMo = {
   's3x':   { pct:38,  label:'STEP 3 / 8' },
   's4':    { pct:50,  label:'STEP 4 / 8' },
   's5A':   { pct:63,  label:'STEP 5 / 8' },
-  's5APeriod': { pct:75, label:'STEP 6 / 8' },
-  's5APeriod2': { pct:80, label:'STEP 6-2 / 8' },
+  's5ACalc': { pct:75, label:'STEP 6 / 8' },
   's5A1Extra': { pct:75, label:'STEP 6 / 8' },
   's5A234Edu': { pct:75, label:'STEP 6 / 8' },
   's5B':   { pct:63,  label:'STEP 5 / 8' },
@@ -2065,6 +2282,7 @@ const pMapMo = {
   's6A2':  { pct:75,  label:'STEP 6 / 8' },
   's6A3':  { pct:75,  label:'STEP 6 / 8' },
   's6A4':  { pct:75,  label:'STEP 6 / 8' },
+  's6A4Quit': { pct:80, label:'STEP 6-2 / 8' },
   's6B1':  { pct:50,  label:'STEP 4 / 8' },
   's6B2':  { pct:50,  label:'STEP 4 / 8' },
   's7A11': { pct:75,  label:'STEP 6 / 8' },
@@ -2119,6 +2337,14 @@ window.go_mo = function(id, pushStack = true) {
   document.getElementById('p-label-mo').textContent = p.label;
   document.getElementById('p-pct-mo').textContent = p.pct + '%';
 
+  if (baseTargetId === 'sRegion') {
+    let sido = document.getElementById('regionSido-mo');
+    let sigungu = document.getElementById('regionSigungu-mo');
+    let sigunguWrap = document.getElementById('regionSigunguWrap-mo');
+    if (sido) sido.value = '';
+    if (sigungu) sigungu.innerHTML = '<option value="">시/군 선택</option>';
+    if (sigunguWrap) sigunguWrap.classList.add('is-hidden');
+  }
   if (baseTargetId === 's8B1') {
     renderDiagnosisResult_mo();
   }
@@ -2129,12 +2355,15 @@ window.go_mo = function(id, pushStack = true) {
     renderConsultPage_mo();
   }
   if (baseTargetId === 's5APeriod2') {
-    renderPeriod2Screen_mo(surveyStateMo.commercialExpType || '');
+    renderQuitScreen_mo(surveyStateMo.commercialExpType || '');
+  }
+  if (baseTargetId === 's5AQuit') {
+    renderAccidentScreen_mo(surveyStateMo.commercialExpType || '');
   }
   // 진단표·서류·상담 페이지: nav-arrow-bar 없으므로 app padding-bottom 제거
   let appEl2 = document.querySelector('.app');
   let widgetEl = document.querySelector('.taxi-check-widget');
-  let miniPages = ['s8B1','sDocs','s9B','s0'];
+  let miniPages = ['sDocs','s0'];
   if (appEl2) {
     if (miniPages.includes(baseTargetId)) {
       appEl2.classList.add('is-mini-page');
@@ -2143,7 +2372,6 @@ window.go_mo = function(id, pushStack = true) {
       if (widgetEl) {
         widgetEl.classList.add('is-mini-page-widget');
         widgetEl.style.minHeight = 'unset';
-        widgetEl.style.overflowY = 'visible';
       }
     } else {
       appEl2.classList.remove('is-mini-page');
@@ -2152,15 +2380,12 @@ window.go_mo = function(id, pushStack = true) {
       if (widgetEl) {
         widgetEl.classList.remove('is-mini-page-widget');
         widgetEl.style.minHeight = '';
-        widgetEl.style.overflowY = '';
       }
     }
   }
   pendingAnswerMo = null;
   updateNavBar_mo(baseTargetId);
-  // 수정4: 화면 상단으로 스크롤
-  let appEl = document.querySelector('.taxi-check-widget');
-  if (appEl) appEl.scrollTop = 0;
+  // 화면 상단으로 스크롤 (window 기준으로 통일)
   window.scrollTo(0,0);
 }
 
@@ -2203,7 +2428,7 @@ window.handleCurrentSeoulNo_mo = function() {
   pendingAnswerMo = { action: function() { go_mo('s2x'); } };
   showModal_mo({
     title: '안내',
-    message: '서류 접수일 기준 서울 거주자만 양수가 가능합니다. 접수일 전에 주소를 서울로 이전해 주셔야 합니다.',
+    message: '서울 면허를 양수하시려는 경우, 서류 접수일 기준 서울에 거주하고 계셔야 양수가 가능합니다. 접수일 전에 주소를 서울로 이전해 주셔야 합니다.',
     buttons: [{ text: '확인', className: 'btn-primary', action: closeModal_mo }]
   });
 };
@@ -2218,7 +2443,7 @@ window.handleTaxiCertNo_mo = function() {
   pendingAnswerMo = { action: function() { go_mo('s6B1'); } };
   showModal_mo({
     title: '안내',
-    message: '서울시 택시운전자격증을 취득하신 상태여야 교육 및 운송사업면허 양수 인가 접수가 가능합니다.',
+    message: '택시운전자격증을 취득하셔야만 각종 교육 신청 및 개인택시 면허 양수 인가 접수가 가능합니다.',
     buttons: [{ text: '확인', className: 'btn-primary', action: closeModal_mo }]
   });
 };
@@ -2232,14 +2457,28 @@ let pendingAnswerMo = null;  // {screenId, value, nextScreen}
 function updateNavBar_mo(screenId) {
   let bar = document.getElementById('navArrowBar-mo');
   let nextBtn = document.getElementById('navNextBtn-mo');
+  let diagBar = document.getElementById('diagBottomBar-mo');
+  let consultBar = document.getElementById('consultBottomBar-mo');
+  let calcBar = document.getElementById('calcBottomBar-mo');
   if (!bar) return;
-  // 인트로·결과·서류·상담 화면에서는 숨김
-  let noNav = ['s0','s9B','s8B1','sDocs'];
+  // 인트로·결과·서류·상담 화면에서는 nav-arrow-bar 숨김
+  let noNav = ['s0','s9B','s8B1','sDocs','s5ACalc'];
   if (noNav.includes(screenId)) {
     bar.classList.remove('show');
   } else {
     bar.classList.add('show');
     nextBtn.disabled = (pendingAnswerMo === null);
+  }
+  // 진단표 페이지에서만 diag-bottom-bar 표시
+  if (diagBar) {
+    diagBar.classList.toggle('show', screenId === 's8B1');
+  }
+  // 전문 상담 페이지에서만 consult-bottom-bar 표시
+  if (consultBar) {
+    consultBar.classList.toggle('show', screenId === 's9B');
+  }
+  if (calcBar) {
+    calcBar.classList.toggle('show', screenId === 's5ACalc');
   }
 }
 
@@ -2471,34 +2710,559 @@ function renderConsultPage_mo() {
 }
 
 // ══════════════════════════════════════
-// 수정11: 경력 종류 선택 → 공통 무사고 기간 화면 렌더
+// 경력 계산기
+// ══════════════════════════════════════
+// 계산기 진입
+window.handleCalcStart_mo = function() {
+  let nextBtn = document.getElementById('navNextBtn-mo');
+  if (nextBtn) nextBtn.disabled = false;
+  pendingAnswerMo = { action: function() { goCalc_mo(); } };
+};
+
+window.s8B1Back_mo = function() {
+  if (surveyStateMo.commercialExp === '예') {
+    // 경력자: 계산기 상태 보존. 스택에서 s8B1 제거 후 s5ACalc로 이동
+    // 스택 탑이 s8B1이면 pop
+    if (navStackMo[navStackMo.length - 1] === 's8B1') navStackMo.pop();
+    // s5ACalc를 스택에 push (goBack 시 돌아올 위치 보존)
+    if (navStackMo[navStackMo.length - 1] !== 's5ACalc') navStackMo.push('s5ACalc');
+    go_mo('s5ACalc', false);
+  } else {
+    goBack_mo();
+  }
+};
+
+window.goCalc_mo = function(fromScreen) {
+  surveyStateMo.commercialExp = '예';
+  window._calcFrom = fromScreen || 's4';
+  // fromScreen을 스택에 push해서 goBack 시 돌아올 수 있게
+  let from = window._calcFrom;
+  if (!navStackMo.length || navStackMo[navStackMo.length - 1] !== from) {
+    navStackMo.push(from);
+  }
+  initCalc_mo();
+  go_mo('s5ACalc', false);
+};
+
+// 계산기 초기화
+function initCalc_mo() {
+  let wrap = document.getElementById('calcRows-mo');
+  if (!wrap) return;
+  calcRowCount_mo = 0;
+  wrap.innerHTML = '';
+  addCalcRow_mo();
+  let resultBox = document.getElementById('calcResultBox-mo');
+  if (resultBox) resultBox.classList.remove('show');
+  let eduBox = document.getElementById('calcEduBox-mo');
+  if (eduBox) eduBox.classList.remove('show');
+  let addBtn = document.getElementById('calcAddBtn-mo');
+  if (addBtn) addBtn.style.display = 'none';
+  let nb = document.getElementById('calcNavNextBtn-mo');
+  if (nb) nb.disabled = true;
+}
+
+// 행 추가
+let calcRowCount_mo = 0;
+function addCalcRow_mo() {
+  let wrap = document.getElementById('calcRows-mo');
+  if (!wrap) return;
+  let idx = ++calcRowCount_mo;
+  let id = 'calcRow' + idx;
+  let div = document.createElement('div');
+  div.className = 'calc-row';
+  div.id = id;
+  div.innerHTML = `
+    <div class="calc-row-num-row">
+      <div class="calc-row-num">경력 ${idx}</div>
+      ${idx > 1 ? `<button type="button" class="calc-row-del" onclick="removeCalcRow_mo('${id}')">경력 지우기</button>` : ''}
+    </div>
+    <select id="${id}-type" onchange="onCalcTypeChange_mo(${idx})">
+      <option value="">— 경력 종류 선택 —</option>
+      <option value="개인택시">개인택시</option>
+      <option value="법인택시">법인택시</option>
+      <option value="버스">버스</option>
+      <option value="화물">화물</option>
+      <option value="지입">지입</option>
+      <option value="법인/기관 운전직">법인/기관 운전직</option>
+    </select>
+    <div class="calc-dates" id="${id}-dates" style="display:none;">
+      <div class="calc-date-wrap">
+        <div class="calc-date-label">시작 연월 선택</div>
+        <div class="calc-month-wrap" id="${id}-start-wrap">
+          <input type="month" id="${id}-start" onchange="onMonthChange_mo('${id}-start-wrap', '${id}')" max="${getTodayMonth_mo()}">
+          <div class="calc-month-placeholder">시작월을 선택해 주세요</div>
+        </div>
+      </div>
+      <div class="calc-date-wrap">
+        <div class="calc-date-label">종료 연월 선택</div>
+        <div class="calc-month-wrap" id="${id}-end-wrap">
+          <input type="month" id="${id}-end" onchange="onMonthChange_mo('${id}-end-wrap', '${id}')" max="${getTodayMonth_mo()}">
+          <div class="calc-month-placeholder">종료월을 선택해 주세요</div>
+        </div>
+        <label class="calc-ongoing" style="margin-top:5px;">
+          <input type="checkbox" id="${id}-ongoing" onchange="onOngoingChange_mo(${idx})"> 현재 운행 중
+        </label>
+      </div>
+    </div>
+    <div class="calc-overlap-warn" id="${id}-overlap">⚠️ 위 경력과 기간이 겹칩니다. 동일 기간에는 하나의 경력만 인정됩니다.</div>
+  `;
+  wrap.appendChild(div);
+}
+
+function getTodayMonth_mo() {
+  let d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+// 경력 종류 선택 시 날짜 영역 표시
+window.onCalcTypeChange_mo = function(idx) {
+  let id = 'calcRow' + idx;
+  let datesDiv = document.getElementById(id + '-dates');
+  let selectEl = document.getElementById(id + '-type');
+  if (datesDiv && selectEl && selectEl.value) {
+    datesDiv.style.display = '';
+  }
+  runCalc_mo();
+};
+
+// month 입력 변경 시 placeholder 숨김 처리
+window.onMonthChange_mo = function(wrapId, rowId) {
+  let wrap = document.getElementById(wrapId);
+  let input = wrap ? wrap.querySelector('input[type="month"]') : null;
+  if (wrap && input) {
+    wrap.classList.toggle('has-value', !!input.value);
+  }
+  updateCalcAddBtn_mo();
+  runCalc_mo();
+};
+
+// 현재 운행 중 체크박스
+window.onOngoingChange_mo = function(idx) {
+  let endInput = document.getElementById('calcRow' + idx + '-end');
+  let endWrap  = document.getElementById('calcRow' + idx + '-end-wrap');
+  let ongoingChk = document.getElementById('calcRow' + idx + '-ongoing');
+  if (!endInput || !ongoingChk) return;
+
+  if (ongoingChk.checked) {
+    // 다른 행의 ongoing 체크 해제 (해제된 행은 날짜 초기화)
+    document.querySelectorAll('#calcRows-mo .calc-row').forEach(function(row) {
+      let otherId = row.id;
+      let otherNum = otherId.replace('calcRow', '');
+      if (parseInt(otherNum) === idx) return;
+      let otherChk = document.getElementById(otherId + '-ongoing');
+      let otherEnd = document.getElementById(otherId + '-end');
+      let otherWrap = document.getElementById(otherId + '-end-wrap');
+      let otherStart = document.getElementById(otherId + '-start');
+      let otherStartWrap = document.getElementById(otherId + '-start-wrap');
+      if (otherChk && otherChk.checked) {
+        otherChk.checked = false;
+        // 다른 행은 복수 체크 상태에서 해제되는 것이므로 날짜 초기화
+        if (otherEnd) { otherEnd.value = ''; otherEnd.disabled = false; }
+        if (otherWrap) otherWrap.classList.remove('has-value');
+        if (otherStart) otherStart.value = '';
+        if (otherStartWrap) otherStartWrap.classList.remove('has-value');
+      }
+    });
+    endInput.value = getTodayMonth_mo();
+    endInput.disabled = true;
+    if (endWrap) endWrap.classList.add('has-value');
+  } else {
+    // 체크 해제 시: 복수 ongoing이었다면(=지금 해제하는 게 마지막이 아닌 경우 이미 위에서 처리됨)
+    // 단독으로 체크된 상태에서 해제할 때는 날짜 유지 (경력 1개인 경우 포함)
+    // 단, 이전에 다른 행이 동시에 체크되어 있었던 경우(복수 체크)라면 초기화 필요
+    // → ongoingChk가 해제되기 전 총 checked 수가 2 이상이었는지로 판단
+    // (이 시점엔 이미 해제됐으므로 현재 checked 수 + 1이 이전 수)
+    let currentOngoingCount = 0;
+    document.querySelectorAll('#calcRows-mo .calc-row').forEach(function(row) {
+      let chk = row.querySelector('input[type="checkbox"]');
+      if (chk && chk.checked) currentOngoingCount++;
+    });
+    // 현재 해제 후 checked 수 = currentOngoingCount
+    // 해제 전 checked 수 = currentOngoingCount + 1
+    // 즉, 해제 전 2개 이상이었으면(currentOngoingCount >= 1) 초기화
+    let wasMultiple = currentOngoingCount >= 1;
+    endInput.disabled = false;
+    if (wasMultiple) {
+      endInput.value = '';
+      if (endWrap) endWrap.classList.remove('has-value');
+      let startInput = document.getElementById('calcRow' + idx + '-start');
+      let startWrap  = document.getElementById('calcRow' + idx + '-start-wrap');
+      if (startInput) startInput.value = '';
+      if (startWrap) startWrap.classList.remove('has-value');
+    } else {
+      // 단독 해제: 날짜 유지, has-value만 상태 동기화
+      if (endWrap) endWrap.classList.toggle('has-value', !!endInput.value);
+    }
+  }
+  updateCalcAddBtn_mo();
+  runCalc_mo();
+};
+
+// 행 삭제
+window.removeCalcRow_mo = function(rowId) {
+  let el = document.getElementById(rowId);
+  if (el) el.remove();
+  updateCalcAddBtn_mo();
+  runCalc_mo();
+};
+
+// 경력 추가하기 버튼 표시 여부: 마지막 행의 시작+종료 모두 입력됐을 때만
+function updateCalcAddBtn_mo() {
+  let addBtn = document.getElementById('calcAddBtn-mo');
+  if (!addBtn) return;
+  let rows = document.querySelectorAll('#calcRows-mo .calc-row');
+  if (rows.length === 0) { addBtn.style.display = 'none'; return; }
+  let lastRow = rows[rows.length - 1];
+  let inputs = lastRow.querySelectorAll('input[type="month"]');
+  let start = inputs[0] ? inputs[0].value : '';
+  let end   = inputs[1] ? inputs[1].value : '';
+  let type  = lastRow.querySelector('select') ? lastRow.querySelector('select').value : '';
+  addBtn.style.display = (type && start && end && start <= end) ? '' : 'none';
+}
+
+// 계산 실행
+function runCalc_mo() {
+  let rows = document.querySelectorAll('#calcRows-mo .calc-row');
+
+  // 경고 초기화 (메시지 원복 포함)
+  rows.forEach(function(row) {
+    let warnEl = row.querySelector('.calc-overlap-warn');
+    if (warnEl) {
+      warnEl.classList.remove('show');
+      warnEl.textContent = '⚠️ 위 경력과 기간이 겹칩니다. 동일 기간에는 하나의 경력만 인정됩니다.';
+    }
+  });
+
+  // 유효한 항목 수집 (경력종류 + 시작 + 종료 모두 있어야 유효)
+  let entries = [];
+  let hasIncomplete = false;
+  rows.forEach(function(row) {
+    let type   = row.querySelector('select') ? row.querySelector('select').value : '';
+    let inputs = row.querySelectorAll('input[type="month"]');
+    let start  = inputs[0] ? inputs[0].value : '';
+    let end    = inputs[1] ? inputs[1].value : '';
+    if (type && start && end && start <= end) {
+      entries.push({ rowId: row.id, type, start, end });
+    } else if (type && !(start && end)) {
+      // 경력종류는 선택했지만 날짜 미완성
+      hasIncomplete = true;
+    }
+  });
+
+  if (entries.length === 0 || hasIncomplete) {
+    document.getElementById('calcResultBox-mo')?.classList.remove('show');
+    document.getElementById('calcEduBox-mo')?.classList.remove('show');
+    let nb = document.getElementById('calcNavNextBtn-mo');
+    if (nb) nb.disabled = true;
+    if (entries.length === 0) return;
+    // 미완성 행이 있으면 결과도 숨기고 종료
+    if (hasIncomplete) return;
+  }
+
+  // ongoing 중복 체크 (현재 운행 중이 2개 이상 체크된 경우)
+  let ongoingCount = 0;
+  rows.forEach(function(row) {
+    let chk = row.querySelector('input[type="checkbox"]');
+    if (chk && chk.checked) ongoingCount++;
+  });
+  if (ongoingCount > 1) {
+    rows.forEach(function(row) {
+      let chk = row.querySelector('input[type="checkbox"]');
+      let warnEl = row.querySelector('.calc-overlap-warn');
+      if (chk && chk.checked && warnEl) {
+        warnEl.textContent = '현재 운행 중인 경력의 종류는 1가지만 선택해 주세요.';
+        warnEl.classList.add('show');
+      }
+    });
+    document.getElementById('calcResultBox-mo')?.classList.remove('show');
+    document.getElementById('calcEduBox-mo')?.classList.remove('show');
+    let nb = document.getElementById('calcNavNextBtn-mo');
+    if (nb) nb.disabled = true;
+    return;
+  }
+
+  // 겹침 감지 — 아래쪽 행(index 큰 쪽)에만 경고 표시
+  let hasOverlap = false;
+  for (let i = 0; i < entries.length; i++) {
+    let overlapWithUpper = false;
+    for (let j = 0; j < i; j++) {
+      // 종료월 == 시작월인 경우는 겹침 아님 (인접 경력)
+      if (entries[i].start === entries[j].end || entries[j].start === entries[i].end) continue;
+      if (entries[i].start < entries[j].end && entries[j].start < entries[i].end) {
+        overlapWithUpper = true;
+        break;
+      }
+    }
+    if (overlapWithUpper) {
+      let warnEl = document.getElementById(entries[i].rowId + '-overlap');
+      if (warnEl) warnEl.classList.add('show');
+      hasOverlap = true;
+    }
+  }
+
+  // 겹침 있으면 결과/다음 버튼 숨김
+  if (hasOverlap) {
+    document.getElementById('calcResultBox-mo')?.classList.remove('show');
+    document.getElementById('calcEduBox-mo')?.classList.remove('show');
+    let nb = document.getElementById('calcNavNextBtn-mo');
+    if (nb) nb.disabled = true;
+    return;
+  }
+
+  let today         = getTodayMonth_mo();
+  let sixYearsAgo   = getMonthOffset_mo(today, -72);
+  let threeYearsAgo = getMonthOffset_mo(today, -36);
+
+  // 유니온 Set으로 중복 제거 계산
+  let normalSet  = new Set();
+  let drivingSet = new Set();
+  entries.forEach(function(e) {
+    let cur = e.start;
+    while (cur <= e.end) {
+      if (e.type === '법인/기관 운전직') drivingSet.add(cur);
+      else normalSet.add(cur);
+      cur = getMonthOffset_mo(cur, 1);
+    }
+  });
+  // 일반 경력이 법인/기관 운전직과 같은 달 겹치면 일반 우선
+  normalSet.forEach(function(m) { drivingSet.delete(m); });
+
+  let count6 = 0, count3 = 0;
+  normalSet.forEach(function(m) {
+    if (m >= sixYearsAgo  && m <= today) count6 += 1;
+    if (m >= threeYearsAgo && m <= today) count3 += 1;
+  });
+  drivingSet.forEach(function(m) {
+    if (m >= sixYearsAgo  && m <= today) count6 += 0.5;
+    if (m >= threeYearsAgo && m <= today) count3 += 0.5;
+  });
+
+  let totalMonths6yr = Math.floor(count6);
+  let totalMonths3yr = Math.floor(count3);
+  window._calcTotal6yr = totalMonths6yr;
+  window._calcTotal3yr = totalMonths3yr;
+
+  // 가장 최근 경력 종료
+  let latestEnd = '';
+  entries.forEach(function(e) {
+    if (!latestEnd || e.end > latestEnd) latestEnd = e.end;
+  });
+  let monthsSinceLatest = latestEnd ? monthDiff_mo(latestEnd, today) : 999;
+
+  // 신규교육 불필요: 개인택시/법인택시 경력 종료 후 2년 이내만
+  let newEduExemptTypes = new Set(['개인택시', '법인택시']);
+  let needsNewEdu = true;
+  entries.forEach(function(e) {
+    if (newEduExemptTypes.has(e.type)) {
+      let since = monthDiff_mo(e.end, today);
+      if (since <= 24) needsNewEdu = false;
+    }
+  });
+  window._calcNeedsNewEdu = needsNewEdu;
+
+  // 자격 판정
+  let qualifies5yr  = totalMonths6yr >= 60;
+  let qualifies30mo = totalMonths3yr >= 30;
+  let qualifies = qualifies5yr || qualifies30mo;
+
+  // surveyState 업데이트
+  let typeSet = new Set(entries.map(function(e) { return e.type; }));
+  let types = Array.from(typeSet);
+  surveyStateMo.commercialExpType = types.join(', ');
+  surveyStateMo.multiCareerNotice = types.length > 1 ? '복수 경력: ' + types.join(', ') : '';
+  surveyStateMo.careerPeriod = formatMonths_mo(totalMonths6yr) + ' (6년 내)';
+  surveyStateMo.accidentFreePeriod = qualifies5yr  ? '최근 6년 내 5년 이상 무사고'
+    : qualifies30mo ? '최근 3년 내 2년 6개월 이상 무사고'
+    : '위 경력 기간에 해당하지 않음';
+  surveyStateMo.corpTaxiQuitPeriod = monthsSinceLatest <= 0 ? '운행 중'
+    : monthsSinceLatest < 6  ? '6개월 미만'
+    : monthsSinceLatest < 12 ? '6개월 이상 1년 미만'
+    : monthsSinceLatest < 24 ? '1년 이상 2년 미만'
+    : '2년 이상';
+  surveyStateMo.transferEducation = qualifies ? '양수교육 불필요' : '';
+
+  // 결과 표시 — 박스1: 경력 계산 결과 / 박스2: 교육 대상 여부
+  let careerData = [
+    { label: '최근 3년 내 2년 6개월 경력 해당 여부', value: formatMonths_mo(totalMonths3yr, 36), cls: qualifies30mo ? 'ok' : totalMonths3yr >= 12 ? 'warn' : 'fail' },
+    { label: '최근 6년 내 5년 경력 해당 여부', value: formatMonths_mo(totalMonths6yr, 72), cls: qualifies5yr ? 'ok' : totalMonths6yr >= 30 ? 'warn' : 'fail' },
+  ];
+  let eduData = [
+    { label: '양수교육',
+      value: qualifies ? '면제 대상'
+        : (types.includes('법인택시') && totalMonths3yr >= 12 && totalMonths3yr < 30) ? '교육 대상(경력자 과정)'
+        : '교육 대상(수료 필요)',
+      cls: qualifies ? 'ok' : 'warn' },
+    { label: '신규교육', value: needsNewEdu ? '교육 대상(수료 필요)' : '면제 대상', cls: needsNewEdu ? 'warn' : 'ok' },
+  ];
+  let careerHtml = careerData.map(function(r) {
+    return '<div class="calc-result-row"><span class="calc-result-label">' + r.label + '</span><span class="calc-result-value ' + r.cls + '">' + r.value + '</span></div>';
+  }).join('');
+  let eduHtml = eduData.map(function(r) {
+    return '<div class="calc-result-row"><span class="calc-result-label">' + r.label + '</span><span class="calc-result-value ' + r.cls + '">' + r.value + '</span></div>';
+  }).join('');
+  let resultRowsEl = document.getElementById('calcResultRows-mo');
+  if (resultRowsEl) resultRowsEl.innerHTML = careerHtml;
+  let eduRowsEl = document.getElementById('calcEduRows-mo');
+  if (eduRowsEl) eduRowsEl.innerHTML = eduHtml;
+  document.getElementById('calcResultBox-mo')?.classList.add('show');
+  document.getElementById('calcEduBox-mo')?.classList.add('show');
+  let nb = document.getElementById('calcNavNextBtn-mo');
+  if (nb) nb.disabled = false;
+}
+
+
+function monthDiff_mo(from, to) {
+  let [fy, fm] = from.split('-').map(Number);
+  let [ty, tm] = to.split('-').map(Number);
+  return Math.max(0, (ty - fy) * 12 + (tm - fm));
+}
+
+function getMonthOffset_mo(ym, offset) {
+  let [y, m] = ym.split('-').map(Number);
+  m += offset;
+  while (m <= 0) { y--; m += 12; }
+  while (m > 12) { y++; m -= 12; }
+  return y + '-' + String(m).padStart(2,'0');
+}
+
+function formatMonths_mo(months, cap) {
+  if (months <= 0) return '0개월';
+  // cap이 지정된 경우 초과분을 cap으로 표시
+  if (cap !== undefined && months >= cap) {
+    let y = Math.floor(cap / 12);
+    let m = cap % 12;
+    if (y > 0 && m > 0) return y + '년 ' + m + '개월';
+    if (y > 0) return y + '년';
+    return m + '개월';
+  }
+  let y = Math.floor(months / 12);
+  let m = months % 12;
+  if (y > 0 && m > 0) return y + '년 ' + m + '개월';
+  if (y > 0) return y + '년';
+  return m + '개월';
+}
+
+// 계산기 결과 확정 → 경고 모달 or s7B1
+window.confirmCalc_mo = function() {
+  let t6 = window._calcTotal6yr || 0;
+  let t3 = window._calcTotal3yr || 0;
+
+  // 법인/기관 운전직 + 다른 경력 혼합 여부 확인
+  let entries = [];
+  document.querySelectorAll('#calcRows-mo .calc-row').forEach(function(row) {
+    let type = row.querySelector('select') ? row.querySelector('select').value : '';
+    let inputs = row.querySelectorAll('input[type="month"]');
+    let start = inputs[0] ? inputs[0].value : '';
+    let end   = inputs[1] ? inputs[1].value : '';
+    if (type && start && end) entries.push(type);
+  });
+  let hasDriving = entries.some(function(t) { return t === '법인\/기관 운전직'; });
+  let hasOther   = entries.some(function(t) { return t !== '법인\/기관 운전직'; });
+  let mixedDriving = hasDriving && hasOther;
+
+  // 경계 구간 판정
+  let warn3 = (t3 >= 30 && t3 <= 39);
+  let warn6 = (t6 >= 60 && t6 <= 63);
+
+  // 다음 화면 이동 함수
+  let nextDest = (window._calcNeedsNewEdu === false) ? 's8B1' : 's7B1';
+  function proceedNext() { go_mo(nextDest); }
+
+  if (mixedDriving) {
+    showModal_mo({
+      title: '복수 경력 합산 안내',
+      message: '복수 경력 합산 시, 법인/기관 운전직 경력은 1/2로 환산되어 합산됩니다.',
+      buttons: [{
+        text: '확인', className: 'btn-primary', action: function() {
+          closeModal_mo();
+          if (warn3 || warn6) {
+            showModal_mo({
+              title: '경력 기간 확인 안내',
+              message: '영업용 차량 혹은 운전직 경력은 운행일수를 기준으로 개월수를 산정합니다.\n또한, 휴직기간은 제외되므로 경력기간이 모호한 분께서는 진단 완료 후, 전문 상담을 신청해 주세요.\n개인택시양수도센터: 1566-7114',
+              buttons: [{ text: '확인', className: 'btn-primary', action: function() { closeModal_mo(); proceedNext(); } }]
+            });
+          } else {
+            proceedNext();
+          }
+        }
+      }]
+    });
+  } else if (warn3 || warn6) {
+    showModal_mo({
+      title: '경력 기간 확인 안내',
+      message: '영업용 차량 혹은 운전직 경력은 운행일수를 기준으로 개월수를 산정합니다.\n또한, 휴직기간은 제외되므로 경력기간이 모호한 분께서는 진단 완료 후, 전문 상담을 신청해 주세요.\n개인택시양수도센터: 1566-7114',
+      buttons: [{ text: '확인', className: 'btn-primary', action: function() { closeModal_mo(); proceedNext(); } }]
+    });
+  } else {
+    proceedNext();
+  }
+};
+
+// ══════════════════════════════════════
+// 경력 종류 선택 → 경력기간 화면으로 (하위호환)
 // ══════════════════════════════════════
 window.selectCareerType_mo = function(type) {
   surveyStateMo.commercialExpType = type;
   surveyStateMo.commercialExp = '예';
-  renderPeriodScreen_mo(type);
-  let nextBtn = document.getElementById('navNextBtn-mo');
-  if (nextBtn) nextBtn.disabled = false;
-  pendingAnswerMo = { action: function() { go_mo('s5APeriod'); } };
+  go_mo('s5ACalc');
+  initCalc_mo();
 };
 
-// 공통 무사고 기간 선택 후 → 영업용 경력 기간(2단계)으로 이동
-window.handlePeriodFromCommon_mo = function(type, value) {
-  surveyStateMo.accidentFreePeriod = value;
-  surveyStateMo.commercialExpType = type;
+// 1단계: 경력기간 화면 렌더
+function renderCareerPeriodScreen_mo(type) {
+  let wrap = document.getElementById('s5APeriodChoices-mo');
+  let tag = document.getElementById('s5APeriod-step-tag-mo');
+  let sub = document.getElementById('s5APeriod-sub-mo');
+  if (!wrap) return;
+  let nums = ['①','②','③','④','⑤'];
+  let opts;
 
-  // 어떤 값이든 2단계(영업용 경력 기간)로 계속 진행
-  if (value === '위 경력 기간에 해당하지 않음') {
-    surveyStateMo.careerPeriod = '';
+  if (type === '법인택시') {
+    if (tag) tag.textContent = 'STEP 6 · 법인택시 경력 기간';
+    if (sub) sub.textContent = '서울시 소재 법인택시 경력 기간 기준입니다.';
+    opts = [
+      { label: '1년 미만', value: '1년 미만', cls: '' },
+      { label: '1년 이상 2년 6개월 미만', value: '1년 이상 2년 6개월 미만', cls: '' },
+      { label: '2년 6개월 이상', value: '2년 6개월 이상', cls: '' },
+      { label: '5년 이상', value: '5년 이상', cls: '' },
+      { label: '잘 모르겠습니다', value: '잘 모르겠음', cls: 'c-fail' }
+    ];
+  } else if (type === '버스/화물/지입') {
+    if (tag) tag.textContent = 'STEP 6 · 버스/화물/지입 경력 기간';
+    if (sub) sub.textContent = '서류 접수일 기준입니다.';
+    opts = [
+      { label: '2년 6개월 미만', value: '2년 6개월 미만', cls: '' },
+      { label: '2년 6개월 이상', value: '2년 6개월 이상', cls: '' },
+      { label: '5년 이상', value: '5년 이상', cls: '' },
+      { label: '잘 모르겠습니다', value: '잘 모르겠음', cls: 'c-fail' }
+    ];
+  } else if (type === '법인/기관 운전직') {
+    if (tag) tag.textContent = 'STEP 6 · 법인/기관 운전직 경력 기간';
+    if (sub) sub.textContent = '서류 접수일 기준입니다.';
+    opts = [
+      { label: '5년 미만', value: '5년 미만', cls: '' },
+      { label: '5년 이상', value: '5년 이상', cls: '' },
+      { label: '잘 모르겠습니다', value: '잘 모르겠음', cls: 'c-fail' }
+    ];
+  } else {
+    opts = [];
   }
 
-  renderPeriod2Screen_mo(type);
+  wrap.innerHTML = opts.map((o, i) =>
+    `<button type="button" class="choice-btn ${o.cls}" onclick="handleCareerPeriodNew_mo('${type}','${o.value}')"><div class="choice-num">${nums[i]}</div><span>${o.label}</span></button>`
+  ).join('');
+}
+
+// 경력기간 선택 → 그만둔기간 화면으로
+window.handleCareerPeriodNew_mo = function(type, period) {
+  surveyStateMo.careerPeriod = period;
+  renderQuitScreen_mo(type);
   let nextBtn = document.getElementById('navNextBtn-mo');
   if (nextBtn) nextBtn.disabled = false;
   pendingAnswerMo = { action: function() { go_mo('s5APeriod2'); } };
 
   // 법인택시 1년 이상 2년 6개월 미만 선택 시 안내 모달
-  if (type === '법인택시' && value === '최근 3년 내 1년 이상 2년 6개월 미만 무사고') {
+  if (type === '법인택시' && period === '1년 이상 2년 6개월 미만') {
     showModal_mo({
       title: '양수교육 경력자 과정 안내',
       message: '최근 3년 내 1년 이상 2년 6개월 미만의 법인택시 경력을 보유하신 분은 양수교육 경력자 과정을 수료하실 수 있습니다.',
@@ -2507,72 +3271,135 @@ window.handlePeriodFromCommon_mo = function(type, value) {
   }
 };
 
-function renderPeriod2Screen_mo(type) {
+// 2단계: 그만둔기간 화면 렌더
+function renderQuitScreen_mo(type) {
   let wrap = document.getElementById('s5APeriod2Choices-mo');
   let tag = document.getElementById('s5APeriod2-step-tag-mo');
   let sub = document.getElementById('s5APeriod2-sub-mo');
   if (!wrap) return;
-
+  let nums = ['①','②','③','④','⑤','⑥'];
   let opts;
+
   if (type === '법인택시') {
-    if (tag) tag.textContent = 'STEP 6-2 · 법인택시 경력 기간';
-    if (sub) sub.textContent = '서울시 소재 법인택시 경력 기간 기준입니다. 서류 접수일 기준입니다.';
+    if (tag) tag.textContent = 'STEP 6-2 · 법인택시 중단 기간';
+    if (sub) sub.textContent = '현재 운행 중이시면 \'운행 중\'을 선택해 주세요.';
     opts = [
-      { label: '접수일 기준 최근 3년 내 1년 이상 2년 6개월 미만', value: '최근 3년 내 1년 이상' },
-      { label: '접수일 기준 최근 3년 내 2년 6개월 이상', value: '최근 3년 내 2년 6개월 이상' },
-      { label: '접수일 기준 최근 6년 내 5년 이상', value: '최근 6년 내 5년 이상' },
-      { label: '위 경력 기간에 해당하지 않음', value: '위 경력 기간에 해당하지 않음' }
+      { label: '운행 중', value: '운행 중' },
+      { label: '6개월 미만', value: '6개월 미만' },
+      { label: '6개월 이상 1년 미만', value: '6개월 이상 1년 미만' },
+      { label: '1년 이상 2년 미만', value: '1년 이상 2년 미만' },
+      { label: '2년 이상', value: '2년 이상' },
+      { label: '잘 모르겠습니다', value: '잘 모르겠음' }
     ];
-  } else if (type === '법인 운전직') {
-    if (tag) tag.textContent = 'STEP 6-2 · 법인 운전직 경력 기간';
-    if (sub) sub.textContent = '서류 접수일 기준입니다.';
+  } else if (type === '버스/화물/지입') {
+    if (tag) tag.textContent = 'STEP 6-2 · 버스/화물/지입 중단 기간';
+    if (sub) sub.textContent = '현재 운행 중이시면 \'운행 중\'을 선택해 주세요.';
     opts = [
-      { label: '접수일 기준 최근 6년 내 5년 이상', value: '최근 6년 내 5년 이상' },
-      { label: '위 경력 기간에 해당하지 않음', value: '위 경력 기간에 해당하지 않음' }
+      { label: '운행 중', value: '운행 중' },
+      { label: '6개월 미만', value: '6개월 미만' },
+      { label: '6개월 이상 1년 미만', value: '6개월 이상 1년 미만' },
+      { label: '1년 이상', value: '1년 이상' },
+      { label: '잘 모르겠습니다', value: '잘 모르겠음' }
+    ];
+  } else if (type === '법인/기관 운전직') {
+    if (tag) tag.textContent = 'STEP 6-2 · 법인/기관 운전직 중단 기간';
+    if (sub) sub.textContent = '현재 운행 중이시면 \'운행 중\'을 선택해 주세요.';
+    opts = [
+      { label: '운행 중', value: '운행 중' },
+      { label: '1년 미만', value: '1년 미만' },
+      { label: '1년 이상', value: '1년 이상' },
+      { label: '잘 모르겠습니다', value: '잘 모르겠음' }
     ];
   } else {
-    let typeLabel = type === '버스/화물/지입' ? '버스/화물/지입' : type;
-    if (tag) tag.textContent = `STEP 6-2 · ${typeLabel} 경력 기간`;
-    if (sub) sub.textContent = '서류 접수일 기준입니다.';
-    opts = [
-      { label: '접수일 기준 최근 3년 내 2년 6개월 이상', value: '최근 3년 내 2년 6개월 이상' },
-      { label: '접수일 기준 최근 6년 내 5년 이상', value: '최근 6년 내 5년 이상' },
-      { label: '위 경력 기간에 해당하지 않음', value: '위 경력 기간에 해당하지 않음' }
-    ];
+    opts = [];
   }
 
-  let nums = ['①','②','③','④'];
-  wrap.innerHTML = opts.map((o, i) => {
-    let colorCls = o.value === '위 경력 기간에 해당하지 않음' ? 'c-fail' : 'c-ok';
-    return `<button type="button" class="choice-btn ${colorCls}" onclick="handlePeriod2FromCommon_mo('${type}','${o.value}')"><div class="choice-num">${nums[i]}</div><span>${o.label}</span></button>`;
-  }).join('');
+  wrap.innerHTML = opts.map((o, i) =>
+    `<button type="button" class="choice-btn" onclick="handleQuitPeriod_mo('${type}','${o.value}')"><div class="choice-num">${nums[i]}</div><span>${o.label}</span></button>`
+  ).join('');
 }
 
-// 영업용 경력 기간(2단계) 선택 후 라우팅
-window.handlePeriod2FromCommon_mo = function(type, careerPeriod) {
-  surveyStateMo.careerPeriod = careerPeriod;
+// 그만둔기간 선택 → 무사고기간 화면으로
+window.handleQuitPeriod_mo = function(type, quit) {
+  surveyStateMo.corpTaxiQuitPeriod = quit;
+  renderAccidentScreen_mo(type);
+  let nextBtn = document.getElementById('navNextBtn-mo');
+  if (nextBtn) nextBtn.disabled = false;
+  pendingAnswerMo = { action: function() { go_mo('s5AQuit'); } };
+};
 
-  let accidentPeriod = surveyStateMo.accidentFreePeriod || '';
-  let dest;
+// 3단계: 무사고기간 화면 렌더
+function renderAccidentScreen_mo(type) {
+  let wrap = document.getElementById('s5AQuitChoices-mo');
+  let tag = document.getElementById('s5AQuit-step-tag-mo');
+  if (!wrap) return;
+  let nums = ['①','②','③','④'];
+  let opts;
 
   if (type === '법인택시') {
-    dest = 's5A1Extra'; // 법인택시 중단 기간 확인으로
+    if (tag) tag.textContent = 'STEP 6-3 · 무사고 운전 기간';
+    opts = [
+      { label: '접수일 기준 최근 3년 내 1년 이상 2년 6개월 미만 무사고', value: '최근 3년 내 1년 이상 2년 6개월 미만 무사고', cls: 'c-ok' },
+      { label: '접수일 기준 최근 3년 내 2년 6개월 이상 무사고', value: '최근 3년 내 2년 6개월 이상 무사고', cls: 'c-ok' },
+      { label: '접수일 기준 최근 6년 내 5년 이상 무사고', value: '최근 6년 내 5년 이상 무사고', cls: 'c-ok' },
+      { label: '위 경력 기간에 해당하지 않음', value: '위 경력 기간에 해당하지 않음', cls: 'c-fail' }
+    ];
   } else if (type === '버스/화물/지입') {
-    surveyStateMo.transferEducation = (careerPeriod !== '위 경력 기간에 해당하지 않음') ? '양수교육 불필요' : '';
-    dest = 's7B1';
-  } else if (type === '법인 운전직') {
-    surveyStateMo.transferEducation = (careerPeriod === '최근 6년 내 5년 이상') ? '양수교육 불필요' : '';
-    dest = 's7B1';
+    if (tag) tag.textContent = 'STEP 6-3 · 무사고 운전 기간';
+    opts = [
+      { label: '접수일 기준 최근 3년 내 2년 6개월 이상 무사고', value: '최근 3년 내 2년 6개월 이상 무사고', cls: 'c-ok' },
+      { label: '접수일 기준 최근 6년 내 5년 이상 무사고', value: '최근 6년 내 5년 이상 무사고', cls: 'c-ok' },
+      { label: '위 경력 기간에 해당하지 않음', value: '위 경력 기간에 해당하지 않음', cls: 'c-fail' }
+    ];
+  } else if (type === '법인/기관 운전직') {
+    if (tag) tag.textContent = 'STEP 6-3 · 무사고 운전 기간';
+    opts = [
+      { label: '접수일 기준 최근 6년 내 5년 이상 무사고', value: '최근 6년 내 5년 이상 무사고', cls: 'c-ok' },
+      { label: '위 경력 기간에 해당하지 않음', value: '위 경력 기간에 해당하지 않음', cls: 'c-fail' }
+    ];
   } else {
-    dest = 's8B1';
+    opts = [];
+  }
+
+  wrap.innerHTML = opts.map((o, i) =>
+    `<button type="button" class="choice-btn ${o.cls}" onclick="handleAccidentPeriodNew_mo('${type}','${o.value}')"><div class="choice-num">${nums[i]}</div><span>${o.label}</span></button>`
+  ).join('');
+}
+
+// 무사고기간 선택 → 라우팅
+window.handleAccidentPeriodNew_mo = function(type, accPeriod) {
+  surveyStateMo.accidentFreePeriod = accPeriod;
+
+  // 신규교육 필요 여부 결정 (그만둔기간 기반)
+  const quit = surveyStateMo.corpTaxiQuitPeriod || '';
+  let requiresNewEdu = false;
+  if (type === '법인택시') {
+    requiresNewEdu = (quit === '2년 이상' || quit === '잘 모르겠음');
+  } else if (type === '버스/화물/지입' || type === '법인/기관 운전직') {
+    requiresNewEdu = (quit === '1년 이상' || quit === '잘 모르겠음');
+  }
+  surveyStateMo.newEducation = requiresNewEdu ? '신규교육 필요' : '신규교육 불필요';
+
+  // 양수교육 필요 여부 결정 (경력기간 + 무사고기간 기반)
+  const career = surveyStateMo.careerPeriod || '';
+  if (type === '법인택시') {
+    if (accPeriod === '최근 3년 내 1년 이상 2년 6개월 미만 무사고') {
+      surveyStateMo.transferEducation = '경력자 과정 양수교육 필요';
+    } else if (accPeriod !== '위 경력 기간에 해당하지 않음') {
+      surveyStateMo.transferEducation = '양수교육 불필요';
+    } else {
+      surveyStateMo.transferEducation = '';
+    }
+  } else {
+    surveyStateMo.transferEducation = (accPeriod !== '위 경력 기간에 해당하지 않음') ? '양수교육 불필요' : '';
   }
 
   let nextBtn = document.getElementById('navNextBtn-mo');
   if (nextBtn) nextBtn.disabled = false;
-  pendingAnswerMo = { action: function() { go_mo(dest); } };
+  pendingAnswerMo = { action: function() { go_mo('s7B1'); } };
 
-  // 법인택시 1년 이상 2년 6개월 미만 선택 시 안내 모달
-  if (type === '법인택시' && careerPeriod === '최근 3년 내 1년 이상') {
+  // 경력자 과정 안내 모달
+  if (type === '법인택시' && accPeriod === '최근 3년 내 1년 이상 2년 6개월 미만 무사고') {
     showModal_mo({
       title: '양수교육 경력자 과정 안내',
       message: '최근 3년 내 1년 이상 2년 6개월 미만의 법인택시 경력을 보유하신 분은 양수교육 경력자 과정을 수료하실 수 있습니다.',
@@ -2581,35 +3408,11 @@ window.handlePeriod2FromCommon_mo = function(type, careerPeriod) {
   }
 };
 
-function renderPeriodScreen_mo(type) {
-  let wrap = document.getElementById('s5APeriodChoices-mo');
-  let tag = document.getElementById('s5APeriod-step-tag-mo');
-  if (!wrap) return;
-  if (tag) tag.textContent = 'STEP 6 · 무사고 운전 기간';
-
-  // 경력 종류에 관계없이 공통 선택지 + 법인택시 추가 항목
-  let opts;
-  if (type === '법인 운전직') {
-    opts = [
-      { label:'접수일 기준 최근 6년 내 5년 이상 무사고', value:'최근 6년 내 5년 이상 무사고' },
-      { label:'위 경력 기간에 해당하지 않음', value:'위 경력 기간에 해당하지 않음' }
-    ];
-  } else {
-    opts = [
-      { label:'접수일 기준 최근 3년 내 2년 6개월 이상 무사고', value:'최근 3년 내 2년 6개월 이상 무사고' },
-      { label:'접수일 기준 최근 6년 내 5년 이상 무사고', value:'최근 6년 내 5년 이상 무사고' },
-      { label:'위 경력 기간에 해당하지 않음', value:'위 경력 기간에 해당하지 않음' }
-    ];
-    if (type === '법인택시') {
-      opts.splice(2, 0, { label:'접수일 기준 최근 3년 내 1년 이상 2년 6개월 미만 무사고', value:'최근 3년 내 1년 이상 2년 6개월 미만 무사고' });
-    }
-  }
-  let nums = ['①','②','③','④'];
-  wrap.innerHTML = opts.map((o,i) => {
-    let colorCls = o.value === '위 경력 기간에 해당하지 않음' ? 'c-fail' : 'c-ok';
-    return `<button type="button" class="choice-btn ${colorCls}" onclick="handlePeriodFromCommon_mo('${type}','${o.value}')"><div class="choice-num">${nums[i]}</div><span>${o.label}</span></button>`;
-  }).join('');
-}
+// 하위호환: 기존 handlePeriodFromCommon_mo, handlePeriod2FromCommon_mo, renderPeriodScreen_mo, renderPeriod2Screen_mo는 복수경력 등에서 참조될 수 있으므로 빈 함수로 유지
+window.handlePeriodFromCommon_mo = function() {};
+window.handlePeriod2FromCommon_mo = function() {};
+function renderPeriodScreen_mo(type) { renderCareerPeriodScreen_mo(type); }
+function renderPeriod2Screen_mo(type) {}
 
 // ══════════════════════════════════════
 // 수정5: 진단표 부적격 색상 처리
@@ -2644,19 +3447,19 @@ function classifyDiagValue_mo(label, rawValue) {
     return '';
   }
 
-  // 영업용 차량 경력 여부
-  if (label.includes('영업용 차량 경력 여부')) {
+  // 영업용 차량/운전직 경력 여부
+  if (label.includes('영업용 차량/운전직 경력 여부') || label.includes('영업용 차량 경력 여부')) {
     return '';
   }
 
-  // 영업용 차량 경력 기간 (경력자 기준)
-  if (label.includes('영업용 차량 경력 기간')) {
-    if (v.includes('1년 이상')) return 'diag-warn';
+  // 영업용 차량/운전직 경력 기간
+  if (label.includes('영업용 차량/운전직 경력 기간') || label.includes('영업용 차량 경력 기간')) {
+    if (v.includes('부족')) return 'diag-fail';
     if (v && v !== '-') return 'diag-ok';
     return '';
   }
 
-  // 무사고 경력 기준 (경력자)
+  // 무사고 경력 기준 (하위호환)
   if (label.includes('무사고 경력 기준')) {
     if (v === '위 경력 기간에 해당하지 않음' || v === '기준 미충족') return 'diag-fail';
     if (v.includes('1년 이상 2년 6개월 미만')) return 'diag-warn';
@@ -2664,22 +3467,18 @@ function classifyDiagValue_mo(label, rawValue) {
     return '';
   }
 
-  // 인사 사고 이력 (미경력자)
-  if (label.includes('인사 사고 이력')) {
-    return '';
-  }
-
-  // 양수교육 수료 여부
+  // 양수교육 대상 여부 / 양수교육 수료 여부
   if (label.includes('양수교육')) {
-    if (v === '불필요' || v === '수료 완료' || v === '수료 예정') return 'diag-ok';
-    if (v === '미당첨' || v.includes('필요')) return 'diag-fail';
+    if (v === '면제 대상' || v === '불필요' || v === '수료 완료' || v === '수료 예정') return 'diag-ok';
+    if (v === '교육 대상(경력자 과정)') return 'diag-blue';
+    if (v === '교육 대상' || v === '미당첨' || v.includes('필요')) return 'diag-fail';
     return '';
   }
 
-  // 신규교육 수료 여부
+  // 신규교육 대상 여부 / 신규교육 수료 여부
   if (label.includes('신규교육')) {
-    if (v === '적합' || v === '불필요') return 'diag-ok';
-    if (v === '부적합' || v === '필요') return 'diag-fail';
+    if (v === '면제 대상' || v === '적합' || v === '불필요') return 'diag-ok';
+    if (v === '교육 대상' || v === '부적합' || v === '필요') return 'diag-warn';
     return '';
   }
 
@@ -2796,7 +3595,7 @@ function handleResidenceHistory_mo(value){
     pendingAnswerMo = { action: function() { go_mo('s2'); } };
     showModal_mo({
       title: '안내',
-      message: `서류 접수일 기준 태어난 이후로 도합 12개월 이상의 서울시 거주 이력이 필요합니다.\n(주민등록초본 기준)\n\n본인의 남은 기간 및 서류 접수 가능일에 대해 궁금하신 분들은\n진단을 끝까지 마치신 후, 전문 상담을 신청해 주세요.`,
+      message: `서울 면허를 양수하시려는 경우, 태어난 이후로 도합 12개월 이상의 서울시 거주 이력이 필요합니다.\n(주민등록초본 기준)\n\n본인의 남은 기간 및 서류 접수 가능일에 대해 궁금하신 분들은\n진단을 끝까지 마치신 후, 전문 상담을 신청해 주세요.`,
       buttons: [{ text: '확인', className: 'btn-primary', action: closeModal_mo }]
     });
     return;
@@ -2835,6 +3634,13 @@ function handleAccidentHistory_mo(value){
   if (nextBtn) nextBtn.disabled = false;
   pendingAnswerMo = { action: function() { go_mo('s7B1'); } };
 }
+window.handleCommercialExpYes_mo = function() {
+  surveyStateMo.commercialExp = '예';
+  let nextBtn = document.getElementById('navNextBtn-mo');
+  if (nextBtn) nextBtn.disabled = false;
+  pendingAnswerMo = { action: function() { goCalc_mo('s4'); } };
+};
+
 function handleTransferEducationStatus_mo(value){
   // 내부 저장값 정규화
   let stored = value === '수료' ? '당첨 - 수료'
@@ -2847,16 +3653,11 @@ function handleTransferEducationStatus_mo(value){
   if (nextBtn) nextBtn.disabled = false;
 
   if (value === '수료' || value === '수료 예정') {
-    // 수료/수료 예정 → 사고이력 확인으로
+    // ①② 수료/수료 예정 → 사고이력 확인으로
     pendingAnswerMo = { action: function() { go_mo('s5B'); } };
 
-  } else if (value === '경력자 불필요') {
-    // 경력자 → 경력 종류 선택으로
-    surveyStateMo.commercialExp = '예';
-    pendingAnswerMo = { action: function() { go_mo('s5A'); } };
-
   } else if (value === '미당첨') {
-    // 미당첨 → 알림 서비스 팝업 후 영업용 경력 여부로
+    // ③ 아직 당첨 안됨 → 알림 서비스 팝업 후 영업용 차량 경력 여부로
     pendingAnswerMo = { action: function() { go_mo('s4'); } };
     showModal_mo({
       title: '양수교육 알림 서비스 신청',
@@ -2869,9 +3670,25 @@ function handleTransferEducationStatus_mo(value){
       ]
     });
 
+  } else if (value === '경력자 불필요') {
+    // ④ 교육 면제자 → 바로 경력 계산기로 (다음 버튼 없이 즉시 이동)
+    surveyStateMo.commercialExp = '예';
+    goCalc_mo('s6B1');
+    return; // pendingAnswer 설정 불필요
+
   } else {
-    // 잘 모르겠음 → 영업용 경력 여부로
+    // ⑤ 잘 모르겠음 → 알림 서비스 팝업 후 영업용 차량 경력 여부로
     pendingAnswerMo = { action: function() { go_mo('s4'); } };
+    showModal_mo({
+      title: '양수교육 알림 서비스 신청',
+      message: `저희 양수도센터에서는 예비 양수자 여러분의 원활한 양수교육 접수를 위해 양수교육 일정을 알려드리는 서비스를 시행하고 있습니다.
+
+본인의 요건에 해당하는 양수교육 접수일을 문자로 알려드리니 신청하시고 놓치지 않게 양수교육 접수하시기 바랍니다.`,
+      buttons: [
+        { text: '신청하기', className: 'btn-link', href: 'https://forms.gle/nu5zfR42y6c1k7HE9' },
+        { text: '이어서 진행', className: 'btn-primary', action: closeModal_mo }
+      ]
+    });
   }
 }
 function handleNewEducation_mo(value){
@@ -2880,19 +3697,56 @@ function handleNewEducation_mo(value){
   if (nextBtn) nextBtn.disabled = false;
   pendingAnswerMo = { action: function() { go_mo('s8B1'); } };
 }
-function handleMultiCareer_mo(){
-  surveyStateMo.commercialExp = '예';
-  surveyStateMo.commercialExpType = '복수 경력 보유';
-  surveyStateMo.multiCareerNotice = '복수의 경력을 보유한 경우 각 경력 기간을 합산하며, 법인 운전직 경력은 1/2로 환산합니다.';
+// 복수 경력 버튼 토글
+let multiCareerSelected_mo = new Set();
+window.toggleMultiCareer_mo = function(type, btn) {
+  if (multiCareerSelected_mo.has(type)) {
+    multiCareerSelected_mo.delete(type);
+    btn.classList.remove('selected');
+  } else {
+    multiCareerSelected_mo.add(type);
+    btn.classList.add('selected');
+  }
+};
+
+// 복수 경력 종류 선택 완료 → 무사고기간으로
+window.confirmMultiCareer_mo = function() {
+  if (multiCareerSelected_mo.size === 0) {
+    showModal_mo({ title: '안내', message: '경력 종류를 하나 이상 선택해 주세요.', buttons: [{ text: '확인', className: 'btn-primary', action: closeModal_mo }] });
+    return;
+  }
+  let types = Array.from(multiCareerSelected_mo).join(', ');
+  surveyStateMo.commercialExpType = types;
+  surveyStateMo.multiCareerNotice = '복수 경력 선택: ' + types + ' (법인/기관 운전직 경력은 1/2로 환산 합산됩니다.)';
+  go_mo('s6A4Quit');
+};
+
+// 복수 경력 무사고기간 선택 → s7B1
+window.handleMultiAccident_mo = function(value) {
+  surveyStateMo.accidentFreePeriod = value;
+  surveyStateMo.transferEducation = (value !== '위 경력 기간에 해당하지 않음') ? '양수교육 불필요' : '';
   let nextBtn = document.getElementById('navNextBtn-mo');
   if (nextBtn) nextBtn.disabled = false;
-  pendingAnswerMo = { action: function() { go_mo('s8B1'); } };
+  pendingAnswerMo = { action: function() { go_mo('s7B1'); } };
+};
+
+function handleMultiCareer_mo(){
+  surveyStateMo.commercialExp = '예';
+  multiCareerSelected_mo = new Set();
+  // 버튼 선택 상태 초기화
+  ['multi-btn-corp-mo','multi-btn-bus-mo','multi-btn-drv-mo'].forEach(function(id) {
+    let el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+  let nextBtn = document.getElementById('navNextBtn-mo');
+  if (nextBtn) nextBtn.disabled = false;
+  pendingAnswerMo = { action: function() { go_mo('s6A4'); } };
 }
 
 function routeCareerAfterEdu_mo(){
   let type = surveyStateMo.commercialExpType || '';
   let dest = type.includes('버스') || type.includes('화물') || type.includes('지입') ? 's6A2'
-           : type.includes('법인 운전직') ? 's6A3'
+           : type.includes('법인/기관 운전직') ? 's6A3'
            : 's6A4';
   let nextBtn = document.getElementById('navNextBtn-mo');
   if (nextBtn) nextBtn.disabled = false;
@@ -2945,7 +3799,7 @@ function handleCareerPeriod_mo(type, value){
     let qualifies = value === '최근 3년 내 2년 6개월 이상 무사고' || value === '최근 6년 내 5년 이상 무사고';
     surveyStateMo.transferEducation = qualifies ? '양수교육 불필요' : '';
     dest = 's7B1';
-  } else if (type === '법인 운전직') {
+  } else if (type === '법인/기관 운전직') {
     let qualifies = value === '최근 6년 내 5년 이상 무사고';
     surveyStateMo.transferEducation = qualifies ? '양수교육 불필요' : '';
     dest = 's7B1';
@@ -2997,10 +3851,6 @@ function displayValue_mo(label, value){
     if (v === '아니오') return '부적합';
   }
   if (label.includes('현재 서울 거주 여부')) {
-    if (v === '예') return '적합';
-    if (v === '아니오') return '부적합';
-  }
-  if (label.includes('영업용 차량 경력 여부')) {
     if (v === '예') return '적합';
     if (v === '아니오') return '부적합';
   }
@@ -3082,9 +3932,9 @@ function getExtraDocs_mo(){
       ]
     };
   }
-  if (type.includes('법인 운전직')) {
+  if (type.includes('법인/기관 운전직')) {
     return {
-      title: '법인 운전직 경력 필요 서류',
+      title: '법인/기관 운전직 경력 필요 서류',
       items: [
         '경력증명서 (운전직 명시 필요)',
         '원천징수영수증',
@@ -3098,9 +3948,9 @@ function getExtraDocs_mo(){
       items: [
         '보유 중인 각 경력별 증빙 서류 일체',
         '경력 합산 산정에 필요한 운전경력증명서',
-        '법인 운전직 경력은 1/2 환산 기준으로 별도 확인'
+        '법인/기관 운전직 경력은 1/2 환산 기준으로 별도 확인'
       ],
-      note: '복수의 경력을 보유한 경우 각 경력 기간을 합산하며, 법인 운전직 경력은 1/2로 환산하여 검토합니다.'
+      note: '복수의 경력을 보유한 경우 각 경력 기간을 합산하며, 법인/기관 운전직 경력은 1/2로 환산하여 검토합니다.'
     };
   }
   return {
@@ -3229,6 +4079,9 @@ async function captureWithWatermark_mo(targetId, filename, silent) {
   });
   clone.querySelectorAll('td.diag-warn').forEach(function(td) {
     td.style.color = '#9A6500'; td.style.fontWeight = '800'; td.style.background = '#FFF8E6';
+  });
+  clone.querySelectorAll('td.diag-blue').forEach(function(td) {
+    td.style.color = '#1A5FA8'; td.style.fontWeight = '800'; td.style.background = '#D6E8FA';
   });
 
   // 서류 목록 구분선
@@ -3388,6 +4241,9 @@ async function buildCaptureWrapper_mo(targetId) {
   });
   clone.querySelectorAll('td.diag-warn').forEach(function(td) {
     td.style.color = '#9A6500'; td.style.fontWeight = '800'; td.style.background = '#FFF8E6';
+  });
+  clone.querySelectorAll('td.diag-blue').forEach(function(td) {
+    td.style.color = '#1A5FA8'; td.style.fontWeight = '800'; td.style.background = '#D6E8FA';
   });
   clone.querySelectorAll('.doc-item').forEach(function(item) {
     item.style.cssText = 'display:flex;align-items:flex-start;gap:10px;padding:9px 14px;border-bottom:1px solid #EAD9D3;font-size:13px;line-height:1.5;color:#1A1612;';
@@ -3613,6 +4469,17 @@ document.addEventListener('click', function(event) {
   }
 }, true);
 
+window.showSampleImg_mo = function(title) {
+  let overlay = document.getElementById('sampleImgOverlay-mo');
+  let titleEl = document.getElementById('sampleImgTitle-mo');
+  if (titleEl) titleEl.textContent = title + ' 샘플';
+  if (overlay) overlay.classList.add('show');
+};
+window.closeSampleImg_mo = function() {
+  let overlay = document.getElementById('sampleImgOverlay-mo');
+  if (overlay) overlay.classList.remove('show');
+};
+
 function closeModal_mo() {
   let overlay = document.getElementById('widgetModalOverlay-mo');
   if (overlay) overlay.style.display = 'none';
@@ -3700,31 +4567,79 @@ function buildDiagnosisRows_mo() {
   rows.push(['서울시 거주 이력', displayValue_mo('서울시 거주 이력', surveyStateMo.residenceHistory || '-')]);
   rows.push(['현재 서울 거주 여부', displayValue_mo('현재 서울 거주 여부', surveyStateMo.currentSeoul || '-')]);
   rows.push(['서울시 택시운전자격증 취득 여부', displayValue_mo('서울시 택시운전자격증 취득 여부', surveyStateMo.taxiCert || '-')]);
-  rows.push(['영업용 차량 경력 여부', displayValue_mo('영업용 차량 경력 여부', surveyStateMo.commercialExp || '-')]);
+
+  // 경력 여부 행: 항목명 변경
+  let careerDisplay = isExperienced
+    ? (surveyStateMo.commercialExpType || '경력자')
+    : '미경력자';
+  rows.push(['영업용 차량/운전직 경력 여부', careerDisplay]);
 
   if (isExperienced) {
-    rows.push(['영업용 차량 경력 종류', surveyStateMo.commercialExpType || '-']);
+    // 경력기간 행: 항목명 변경 + 값 개선
+    let t6 = window._calcTotal6yr || 0;
+    let t3 = window._calcTotal3yr || 0;
+    let qual5yr  = t6 >= 60;
+    let qual30mo = t3 >= 30;
+
+    // 괄호 안 기준 결정: 둘 다 충족 or 둘 다 미충족 → '3년 내', 하나만 충족 → 충족하는 기준
+    let criteriaLabel;
+    if (qual5yr && qual30mo) criteriaLabel = '3년 내';
+    else if (!qual5yr && !qual30mo) criteriaLabel = '3년 내';
+    else if (qual5yr) criteriaLabel = '6년 내';
+    else criteriaLabel = '3년 내';
+
+    // 표시 값: 최근 m년 내 n개월 (기준 초과 시 상한으로 cap)
+    let displayMonths = criteriaLabel === '6년 내' ? t6 : t3;
+    let criteriaYear = criteriaLabel === '6년 내' ? '6' : '3';
+    let capVal = criteriaLabel === '6년 내' ? 60 : 36;  // 3년 내 최대 36개월, 6년 내 최대 60개월
+    let baseValue = '최근 ' + criteriaYear + '년 내 ' + formatMonths_mo(displayMonths, capVal);
+
+    // 남은 개월 표시: 둘 다 미충족일 때만 더 가까운 기준 기준으로 N개월 부족 표시
+    let remain3 = 30 - t3;
+    let remain6 = 60 - t6;
+    let remainStr = '';
+    if (!qual30mo && !qual5yr) {
+      // 둘 다 미충족 → 더 가까운 쪽
+      if (remain3 <= remain6) {
+        remainStr = ' → ' + remain3 + '개월 부족';
+      } else {
+        remainStr = ' → ' + remain6 + '개월 부족';
+      }
+    }
+    // qual30mo 또는 qual5yr 충족 시 부족 표시 없음 (이미 기준 충족)
+
+    let careerPeriodValue = baseValue + remainStr;
+    rows.push(['영업용 차량/운전직 경력 기간', careerPeriodValue]);
+
+    // 양수교육 대상 여부 (경력자)
+    let eduExempt = qual5yr || qual30mo;
+    let isCorpTaxiType = (surveyStateMo.commercialExpType || '').includes('법인택시');
+    // 법인택시 + 3년 내 1년(12개월) 이상 2년6개월(30개월) 미만 → 경력자 과정
+    let isCorpTaxiCourse = isCorpTaxiType && t3 >= 12 && t3 < 30;
+    let transferVal;
+    if (eduExempt) {
+      transferVal = '면제 대상';
+    } else if (isCorpTaxiCourse) {
+      transferVal = '교육 대상(경력자 과정)';
+    } else {
+      transferVal = '교육 대상';
+    }
+    rows.push(['양수교육 대상 여부', transferVal]);
+
+    // 신규교육 대상 여부 (경력자)
+    let newEduNeeded = window._calcNeedsNewEdu !== false;
+    let newEduVal = newEduNeeded ? '교육 대상' : '면제 대상';
+    rows.push(['신규교육 대상 여부', newEduVal]);
+
+  } else {
+    // 미경력자: 인사 사고 이력
+    rows.push(['인사 사고 이력', displayValue_mo('인사 사고 이력', surveyStateMo.accidentFreePeriod || '-')]);
+    rows.push(['양수교육 수료 여부', displayValue_mo('양수교육 수료 여부', surveyStateMo.transferEducation || '-')]);
+    if (surveyStateMo.newEducation) {
+      rows.push(['신규교육 수료 여부', displayValue_mo('신규교육 수료 여부', surveyStateMo.newEducation || '-')]);
+    }
   }
 
-  if (isCorpTaxi) {
-    rows.push(['법인택시 중단 기간', formatCorpQuitPeriodDisplay_mo(surveyStateMo.corpTaxiQuitPeriod)]);
-  }
-
-  rows.push([isExperienced ? '무사고 경력 기준' : '인사 사고 이력', displayValue_mo(isExperienced ? '무사고 경력 기준' : '인사 사고 이력', surveyStateMo.accidentFreePeriod || '-')]);
-
-  if (isExperienced && surveyStateMo.careerPeriod) {
-    rows.push(['영업용 차량 경력 기간', displayValue_mo('영업용 차량 경력 기간', surveyStateMo.careerPeriod)]);
-  }
-  rows.push(['양수교육 수료 여부', displayValue_mo('양수교육 수료 여부', surveyStateMo.transferEducation || surveyStateMo.experiencedNewEducation || '-')]);
-
-  if (surveyStateMo.newEducation || isCorpTaxi || (surveyStateMo.commercialExpType || '').includes('법인 운전직') || surveyStateMo.commercialExp === '아니오') {
-    rows.push(['신규교육 수료 여부', displayValue_mo('신규교육 수료 여부', surveyStateMo.newEducation || surveyStateMo.experiencedNewEducation || '-')]);
-  }
-
-  // 복수 경력 안내 행 추가
-  if ((surveyStateMo.commercialExpType || '').includes('복수')) {
-    rows.push(['📌 복수 경력 합산 기준', '<span style="font-size:14px;line-height:1.8;">최근 6년 내 도합 5년 이상의 무사고 경력 기간이 요구됩니다.<br>단, 법인 운전직 경력은 1/2로 합산되어 계산됩니다.</span>']);
-  }
   return rows;
 }
 
